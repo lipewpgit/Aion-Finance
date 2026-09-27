@@ -316,6 +316,44 @@
     .quote-converter input,.quote-converter select { min-height:39px; padding:0 10px; border:1px solid #d7dce8; border-radius:10px; color:var(--ink); background:white; font-size:12px; font-weight:700; }
     .quote-converter input { width:108px; }
     .conversion-result { min-width:120px; color:#4e4aab; font:800 12px/1.25 Consolas,monospace; text-align:right; }
+    .economic-calendar { margin-top:24px; padding-top:22px; border-top:1px solid #e8ebf2; }
+    .economic-head { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:16px; }
+    .economic-title { display:flex; align-items:center; gap:10px; }
+    .economic-title h3 { margin:0; font:700 20px/1.1 Georgia,serif; letter-spacing:-.025em; }
+    .economic-title span { color:#8c94aa; font-size:19px; }
+    .economic-title small { display:block; margin-top:5px; color:var(--muted); font-size:11px; font-weight:600; }
+    .economic-controls { display:flex; align-items:center; gap:7px; }
+    .economic-controls button { display:grid; place-items:center; width:36px; height:36px; padding:0; border:1px solid var(--line); border-radius:50%; color:var(--ink); background:white; transition:transform .18s ease,opacity .18s ease,background .18s ease; }
+    .economic-controls button:hover:not(:disabled) { transform:translateY(-1px); background:#f0efff; }
+    .economic-controls button:disabled { opacity:.28; cursor:default; }
+    .economic-controls svg { width:17px; height:17px; }
+    .economic-viewport { overflow-x:auto; padding:2px 2px 13px; scroll-behavior:smooth; scrollbar-width:none; overscroll-behavior-inline:contain; }
+    .economic-viewport::-webkit-scrollbar { display:none; }
+    .economic-events { display:flex; gap:12px; width:max-content; }
+    .economic-event { position:relative; flex:0 0 282px; min-height:194px; padding:17px; overflow:hidden; border:1px solid #e2e6ef; border-radius:20px; background:linear-gradient(145deg,#fff,#f7f8fc); box-shadow:0 7px 20px rgba(17,22,43,.045); animation:economic-rise .48s cubic-bezier(.2,.8,.2,1) both; animation-delay:var(--delay,0ms); }
+    .economic-event:hover { border-color:#cfd4e5; box-shadow:0 13px 28px rgba(17,22,43,.075); transform:translateY(-2px); }
+    @keyframes economic-rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+    .event-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .event-moment { display:flex; align-items:center; gap:7px; }
+    .event-day { color:var(--muted); font-size:11px; font-weight:800; }
+    .event-time { padding:5px 7px; border-radius:7px; color:#a64035; background:#ffebe7; font:800 11px/1 Consolas,monospace; }
+    .volatility { display:flex; align-items:flex-end; gap:2px; height:16px; }
+    .volatility i { display:block; width:4px; border-radius:4px; background:#dde1e9; }
+    .volatility i:nth-child(1) { height:8px; }
+    .volatility i:nth-child(2) { height:12px; }
+    .volatility i:nth-child(3) { height:16px; }
+    .volatility[data-impact="low"] i:nth-child(1),.volatility[data-impact="medium"] i:nth-child(-n+2),.volatility[data-impact="high"] i { background:#5e6478; }
+    .event-name { display:flex; align-items:center; gap:11px; min-height:48px; margin:15px 0 18px; }
+    .event-flag { display:grid; place-items:center; width:38px; height:38px; flex:0 0 auto; border:1px solid #e5e8ef; border-radius:50%; background:white; font-size:21px; box-shadow:0 3px 9px rgba(17,22,43,.06); }
+    .event-name strong { display:-webkit-box; overflow:hidden; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:13px; line-height:1.25; }
+    .event-values { display:grid; grid-template-columns:repeat(3,1fr); padding-top:14px; border-top:1px solid #eaedf3; text-align:center; }
+    .event-values div + div { border-left:1px solid #eaedf3; }
+    .event-values span { display:block; color:var(--muted); font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+    .event-values b { display:block; margin-top:5px; font:800 11px/1.2 Consolas,monospace; }
+    .event-values b.actual { color:#4e4aab; }
+    .economic-footer { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:2px; }
+    .economic-footer button { padding:0; border:0; color:#4c55b9; background:transparent; font-size:12px; font-weight:900; }
+    .economic-footer p { margin:0; color:var(--muted); font-size:10px; }
 
     dialog { width:min(520px, calc(100% - 28px)); padding:0; border:0; border-radius:24px; color:var(--ink); background:var(--paper); box-shadow:0 30px 90px rgba(11,15,31,.35); }
     dialog::backdrop { background:rgba(17,22,43,.62); backdrop-filter:blur(5px); }
@@ -366,6 +404,7 @@
       .quotes-foot { grid-template-columns:1fr; }
       .quote-converter { justify-content:flex-start; flex-wrap:wrap; }
       .conversion-result { text-align:left; }
+      .economic-event { flex-basis:270px; }
     }
     @media (max-width: 560px) {
       h1 { font-size:27px; }
@@ -402,6 +441,10 @@
       .quote-converter { display:grid; grid-template-columns:1fr 1fr; width:100%; }
       .quote-converter label,.conversion-result { grid-column:1/-1; }
       .quote-converter input { width:100%; }
+      .economic-head { align-items:flex-start; }
+      .economic-title h3 { font-size:18px; }
+      .economic-event { flex-basis:min(272px,calc(100vw - 82px)); }
+      .economic-footer { align-items:flex-start; flex-direction:column; }
     }
     @media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
   </style>
@@ -543,6 +586,16 @@
         <div class="quotes-foot">
           <div class="quotes-meta"><strong id="quotes-updated">Buscando as cotações mais recentes…</strong>Dados de mercado com cache de até 1 minuto. Referência informativa, não recomendação de investimento.</div>
           <div class="quote-converter" aria-label="Conversor de cotações"><label for="conversion-amount">Quanto dá?</label><input id="conversion-amount" type="number" min="0" step="10" value="1000" aria-label="Valor em reais"><select id="conversion-asset" aria-label="Moeda para converter"><option value="USD">Dólar</option><option value="EUR">Euro</option><option value="BTC">Bitcoin</option></select><output class="conversion-result" id="conversion-result">Aguardando cotação</output></div>
+        </div>
+        <div class="economic-calendar" aria-labelledby="economic-title">
+          <div class="economic-head">
+            <div class="economic-title"><div><h3 id="economic-title">Calendário econômico <span aria-hidden="true">›</span></h3><small>Um radar visual de indicadores e decisões de mercado</small></div></div>
+            <div class="economic-controls" aria-label="Navegar pelos eventos"><button id="economic-prev" aria-label="Eventos anteriores" disabled><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button><button id="economic-next" aria-label="Próximos eventos"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></div>
+          </div>
+          <div class="economic-viewport" id="economic-viewport" tabindex="0" aria-label="Eventos do calendário econômico">
+            <div class="economic-events" id="economic-events"></div>
+          </div>
+          <div class="economic-footer"><button id="all-market-events">Ver próximos eventos ›</button><p>Dados demonstrativos · confirme eventos e horários em fontes oficiais</p></div>
         </div>
       </section>
 
@@ -702,7 +755,7 @@
       let width = 0, height = 0, baseRadius = 0, zoom = 1;
       let land = null, dots = [], suppressClick = false, pointerStart = null;
       let rotation = [-24, -13, 0], autoRotate = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-      let previousFrame = performance.now();
+      let previousFrame = performance.now(), globeVisible = true;
       const projection = d3.geoOrthographic().clipAngle(90).precision(.3);
       const path = d3.geoPath(projection, context);
       const graticule = d3.geoGraticule10();
@@ -829,14 +882,17 @@
       });
 
       function animate(now) {
-        const elapsed = Math.min(40, now - previousFrame);
-        previousFrame = now;
-        if (autoRotate && land) {
+        const elapsed = Math.min(80, now - previousFrame);
+        if (autoRotate && land && globeVisible && elapsed >= 32) {
+          previousFrame = now;
           rotation[0] += elapsed * .0045;
           renderGlobe();
+        } else if (!globeVisible) {
+          previousFrame = now;
         }
         requestAnimationFrame(animate);
       }
+      new IntersectionObserver(entries => { globeVisible = entries[0]?.isIntersecting ?? true; }, { rootMargin:'120px' }).observe(globeButton);
       new ResizeObserver(resizeGlobe).observe(globeButton);
       resizeGlobe();
       requestAnimationFrame(animate);
@@ -895,6 +951,43 @@
     document.getElementById('conversion-amount').addEventListener('input', renderConversion);
     document.getElementById('conversion-asset').addEventListener('change', renderConversion);
     refreshQuotes();
+
+    const economicEvents = [
+      { flag:'🇧🇷', country:'Brasil', day:'Hoje', time:'09:00', name:'IPCA-15 mensal', actual:'0,42%', forecast:'0,39%', prior:'0,35%', impact:'high' },
+      { flag:'🇺🇸', country:'Estados Unidos', day:'Hoje', time:'14:30', name:'Pedidos de seguro-desemprego', actual:'225 mil', forecast:'230 mil', prior:'228 mil', impact:'medium' },
+      { flag:'🇪🇺', country:'Zona do Euro', day:'Hoje', time:'10:00', name:'Confiança do consumidor', actual:'−14,5', forecast:'−14,2', prior:'−14,7', impact:'medium' },
+      { flag:'🇬🇧', country:'Reino Unido', day:'Hoje', time:'08:00', name:'Decisão sobre a taxa de juros', actual:null, forecast:'4,00%', prior:'4,00%', impact:'high' },
+      { flag:'🇯🇵', country:'Japão', day:'Amanhã', time:'20:30', name:'Inflação ao consumidor de Tóquio', actual:null, forecast:'2,8%', prior:'2,9%', impact:'high' },
+      { flag:'🇦🇺', country:'Austrália', day:'Amanhã', time:'22:30', name:'Vendas no varejo mensal', actual:null, forecast:'0,3%', prior:'0,2%', impact:'low' }
+    ];
+    const economicViewport = document.getElementById('economic-viewport');
+    const economicPrev = document.getElementById('economic-prev');
+    const economicNext = document.getElementById('economic-next');
+    const impactLabels = { high:'alto', medium:'médio', low:'baixo' };
+    document.getElementById('economic-events').innerHTML = economicEvents.map((event,index) => `
+      <article class="economic-event" style="--delay:${index*55}ms">
+        <div class="event-top"><div class="event-moment"><span class="event-day">${event.day}</span><span class="event-time">${event.time}</span></div><span class="volatility" data-impact="${event.impact}" role="img" aria-label="Impacto ${impactLabels[event.impact]}" title="Impacto ${impactLabels[event.impact]}"><i></i><i></i><i></i></span></div>
+        <div class="event-name"><span class="event-flag" role="img" aria-label="${event.country}">${event.flag}</span><strong>${event.name}</strong></div>
+        <div class="event-values"><div><span>Atual</span><b class="actual">${event.actual ?? '—'}</b></div><div><span>Previsão</span><b>${event.forecast ?? '—'}</b></div><div><span>Anterior</span><b>${event.prior ?? '—'}</b></div></div>
+      </article>`).join('');
+    function updateEconomicControls() {
+      const maxScroll = economicViewport.scrollWidth - economicViewport.clientWidth;
+      economicPrev.disabled = economicViewport.scrollLeft <= 2;
+      economicNext.disabled = economicViewport.scrollLeft >= maxScroll - 2;
+    }
+    function scrollEconomic(direction) {
+      economicViewport.scrollLeft += direction * economicViewport.clientWidth * .82;
+    }
+    economicPrev.addEventListener('click',()=>scrollEconomic(-1));
+    economicNext.addEventListener('click',()=>scrollEconomic(1));
+    economicViewport.addEventListener('scroll',updateEconomicControls,{passive:true});
+    window.addEventListener('resize',updateEconomicControls,{passive:true});
+    document.getElementById('all-market-events').addEventListener('click',event=>{
+      const atEnd = economicViewport.scrollLeft >= economicViewport.scrollWidth-economicViewport.clientWidth-2;
+      economicViewport.scrollLeft = atEnd ? 0 : economicViewport.scrollWidth;
+      event.currentTarget.textContent = atEnd ? 'Ver próximos eventos ›' : 'Voltar ao início ‹';
+    });
+    updateEconomicControls();
 
     const chartData = {
       '3M': { labels:['JUL','AGO','SET'], income:[7200,8150,8950], expense:[5100,4980,5420.8], subtitle:'Uma visão mais próxima dos últimos três meses' },
