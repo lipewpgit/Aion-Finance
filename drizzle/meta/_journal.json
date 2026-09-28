@@ -8,6 +8,13 @@
       "when": 1790555254078,
       "tag": "0000_wonderful_violations",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790559385717,
+      "tag": "0001_demonic_cloak",
+      "breakpoints": true
     }
   ]
 }

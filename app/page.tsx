@@ -1,9 +1,9 @@
 import AionAuthLanding from "@/components/ui/saa-s-template";
-import { chatGPTSignInPath, chatGPTSignOutPath, getChatGPTUser } from "./chatgpt-auth";
+import { getCurrentUser } from "./auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const user = await getChatGPTUser();
-  return <AionAuthLanding signInHref={chatGPTSignInPath("/painel")} dashboardHref="/painel" signedIn={Boolean(user)} displayName={user?.displayName} signOutHref={user ? chatGPTSignOutPath("/") : undefined} />;
+  const user = await getCurrentUser();
+  return <AionAuthLanding signInHref="/entrar" dashboardHref="/painel" signedIn={Boolean(user)} displayName={user?.displayName} signOutHref={user ? "/api/auth/logout" : undefined} />;
 }

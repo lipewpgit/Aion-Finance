@@ -551,10 +551,25 @@
     .field input,.field select { color:var(--ink); border-color:var(--line); background:#15161a; }
     .toast { color:#050506; background:#fff; }
     .mobile-bar { border:1px solid var(--line); background:rgba(5,5,6,.96); box-shadow:0 18px 50px rgba(0,0,0,.55); }
+    .empty-state { display:grid; place-items:center; min-height:150px; padding:28px; border:1px dashed var(--line); border-radius:16px; color:var(--muted); text-align:center; }
+    .empty-state strong { display:block; margin-bottom:7px; color:var(--ink); font-size:14px; }
+    .reset-button { display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:0 14px; border:1px solid var(--line); border-radius:12px; color:var(--muted); background:#111216; cursor:pointer; }
+    .reset-button:hover { color:#ffb4aa; border-color:rgba(255,143,129,.35); }
+    .conversion-route { display:grid; grid-template-columns:1fr auto 1fr; align-items:end; gap:10px; }
+    .conversion-route label { display:grid; gap:6px; color:var(--muted); font-size:11px; }
+    .swap-currency { width:38px; height:38px; border:1px solid var(--line); border-radius:11px; color:var(--ink); background:#15161a; cursor:pointer; }
+    body[data-view="overview"] .market-portal,body[data-view="overview"] #quotes,body[data-view="overview"] #calendar,body[data-view="overview"] #budget,body[data-view="overview"] #goals { display:none; }
+    body[data-view="transactions"] .summary-grid,body[data-view="transactions"] .market-portal,body[data-view="transactions"] .metric-card,body[data-view="transactions"] .right-stack,body[data-view="transactions"] #quotes,body[data-view="transactions"] #calendar { display:none; }
+    body[data-view="budget"] .summary-grid,body[data-view="budget"] .market-portal,body[data-view="budget"] .stack:first-child,body[data-view="budget"] .health-card,body[data-view="budget"] #goals,body[data-view="budget"] #quotes,body[data-view="budget"] #calendar { display:none; }
+    body[data-view="goals"] .summary-grid,body[data-view="goals"] .market-portal,body[data-view="goals"] .stack:first-child,body[data-view="goals"] .health-card,body[data-view="goals"] #budget,body[data-view="goals"] #quotes,body[data-view="goals"] #calendar { display:none; }
+    body[data-view="quotes"] .summary-grid,body[data-view="quotes"] .market-portal,body[data-view="quotes"] .workspace,body[data-view="quotes"] #calendar { display:none; }
+    body[data-view="calendar"] .summary-grid,body[data-view="calendar"] .market-portal,body[data-view="calendar"] .workspace,body[data-view="calendar"] #quotes { display:none; }
+    body[data-view="transactions"] .workspace,body[data-view="budget"] .workspace,body[data-view="goals"] .workspace { grid-template-columns:1fr; }
+    @media (max-width:620px) { .conversion-route { grid-template-columns:1fr auto 1fr; } .quote-converter { align-items:stretch; } }
     @media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
   </style>
 </head>
-<body>
+<body data-view="overview">
   <div class="app">
     <aside class="sidebar" aria-label="Navegação principal">
       <div class="brand">
@@ -574,9 +589,10 @@
 
     <main id="overview">
       <header class="topbar">
-        <div><p class="eyebrow">Domingo, 27 de setembro</p><h1>Boa noite, Alex.</h1></div>
+        <div><p class="eyebrow" id="today-label">Hoje</p><h1>Boa noite, Alex.</h1></div>
         <div class="top-actions">
           <button class="icon-button" id="toggle-values" aria-label="Ocultar valores" title="Ocultar valores"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></button>
+          <button class="reset-button" id="reset-data" title="Apagar movimentações e compromissos desta conta">Zerar dados</button>
           <button class="primary-button" id="open-dialog"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nova movimentação</span></button>
         </div>
       </header>
@@ -584,12 +600,12 @@
       <section class="summary-grid" aria-label="Resumo financeiro">
         <article class="balance-card">
           <div class="balance-label">Patrimônio total</div>
-          <div class="balance-value money">R$ 42.680,90</div>
-          <div class="balance-delta">↗ 4,8% este mês</div>
+          <div class="balance-value money" id="summary-balance">R$ 0,00</div>
+          <div class="balance-delta" id="summary-balance-note">Adicione sua primeira movimentação</div>
           <svg class="orbit" viewBox="0 0 160 160" aria-hidden="true"><circle class="base" cx="80" cy="80" r="54"/><circle class="progress" cx="80" cy="80" r="54"/><circle class="orbit-dot" cx="127" cy="53" r="5"/></svg>
         </article>
-        <article class="mini-card"><div class="mini-head"><span>Entradas</span><span class="mini-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m6 14 6-6 6 6M12 8v11"/></svg></span></div><div class="mini-value money">R$ 8.950,00</div><div class="mini-note"><b>+12%</b> comparado a agosto</div></article>
-        <article class="mini-card"><div class="mini-head"><span>Saídas</span><span class="mini-icon out"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m6 10 6 6 6-6M12 16V5"/></svg></span></div><div class="mini-value money">R$ 5.420,80</div><div class="mini-note"><b>R$ 3.529,20</b> livres no mês</div></article>
+        <article class="mini-card"><div class="mini-head"><span>Entradas</span><span class="mini-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m6 14 6-6 6 6M12 8v11"/></svg></span></div><div class="mini-value money" id="summary-income">R$ 0,00</div><div class="mini-note" id="summary-income-note">Nenhuma entrada registrada</div></article>
+        <article class="mini-card"><div class="mini-head"><span>Saídas</span><span class="mini-icon out"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m6 10 6 6 6-6M12 16V5"/></svg></span></div><div class="mini-value money" id="summary-expense">R$ 0,00</div><div class="mini-note" id="summary-expense-note">Nenhum gasto registrado</div></article>
       </section>
 
       <section class="market-portal" aria-labelledby="market-title">
@@ -612,9 +628,9 @@
             <div class="metric-content">
               <div class="metric-top">
                 <div class="metric-heading"><h2>Balanço do período</h2><div class="view-toggle" aria-label="Visualização do gráfico"><button class="active" data-chart-view="curve" aria-label="Visualizar em curvas"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 17c4-8 6 2 10-6s5 2 8-5"/></svg></button><button data-chart-view="bars" aria-label="Visualizar em barras"><svg fill="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="4" height="9" rx="1"/><rect x="10" y="5" width="4" height="15" rx="1"/><rect x="16" y="8" width="4" height="12" rx="1"/></svg></button></div></div>
-                <div style="display:flex;align-items:center;gap:10px"><span class="metric-trend">↗ 7,4%</span><div class="segmented" aria-label="Período"><button data-period="3M">3M</button><button class="active" data-period="6M">6M</button><button data-period="1A">1A</button></div></div>
+                <div style="display:flex;align-items:center;gap:10px"><span class="metric-trend" id="chart-trend">0,0%</span><div class="segmented" aria-label="Período"><button data-period="3M">3M</button><button class="active" data-period="6M">6M</button><button data-period="1A">1A</button></div></div>
               </div>
-              <div class="metric-kpi money" id="chart-balance-head">R$ 3.529,20</div>
+              <div class="metric-kpi money" id="chart-balance-head">R$ 0,00</div>
               <div class="metric-kpi-label" id="chart-subtitle">Saldo entre entradas e saídas nos últimos seis meses</div>
               <div class="chart-legend" style="border:0;margin:13px 0 0;padding:0"><span><i></i>Entradas</span><span><i></i>Saídas</span></div>
             </div>
@@ -630,38 +646,28 @@
               </div>
               <div class="chart-labels" id="chart-labels"><span>ABR</span><span>MAI</span><span>JUN</span><span>JUL</span><span>AGO</span><span>SET</span></div>
             </div>
-            <div class="metric-footer"><div class="metric-delta"><b id="chart-delta">+ R$ 1.350</b> desde o início</div><div class="metric-stats"><span><b id="chart-peak">R$ 8.950</b> pico</span><span>·</span><span><b id="chart-low">R$ 6.100</b> mínima</span><span>·</span><span><b id="chart-avg">R$ 7.391</b> média</span></div></div>
+            <div class="metric-footer"><div class="metric-delta"><b id="chart-delta">+ R$ 0</b> desde o início</div><div class="metric-stats"><span><b id="chart-peak">R$ 0</b> pico</span><span>·</span><span><b id="chart-low">R$ 0</b> mínima</span><span>·</span><span><b id="chart-avg">R$ 0</b> média</span></div></div>
           </article>
 
           <article class="panel transactions" id="transactions">
             <div class="panel-head"><div><h2>Movimentações recentes</h2><p id="transaction-count">4 lançamentos mais recentes</p></div><button class="link-button" id="filter-button">Mostrar entradas</button></div>
-            <div class="transaction-list" id="transaction-list">
-              <div class="transaction" data-type="expense"><div class="tx-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9h18M5 9l1-5h12l1 5M5 9v10h14V9M9 19v-6h6v6"/></svg></div><div><div class="tx-name">Mercado Boa Praça</div><div class="tx-meta">Alimentação · Hoje, 18:42</div></div><div class="tx-amount money">− R$ 286,40<div class="tx-status">Pago no crédito</div></div></div>
-              <div class="transaction" data-type="income"><div class="tx-icon in"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 7h16v11H4zM7 7V5h10v2M8 12h8"/></svg></div><div><div class="tx-name">Salário</div><div class="tx-meta">Renda · Ontem, 09:10</div></div><div class="tx-amount in money">+ R$ 7.800,00<div class="tx-status">Recebido</div></div></div>
-              <div class="transaction" data-type="expense"><div class="tx-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div><div><div class="tx-name">Aion Internet</div><div class="tx-meta">Casa · 25 set</div></div><div class="tx-amount money">− R$ 129,90<div class="tx-status">Débito automático</div></div></div>
-              <div class="transaction" data-type="expense"><div class="tx-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 16h14l-1-7H6zM8 9V7a4 4 0 0 1 8 0v2"/></svg></div><div><div class="tx-name">Tênis & Cia</div><div class="tx-meta">Compras · 23 set</div></div><div class="tx-amount money">− R$ 349,00<div class="tx-status">2 de 3 parcelas</div></div></div>
-            </div>
+            <div class="transaction-list" id="transaction-list"><div class="empty-state"><div><strong>Nenhuma movimentação ainda</strong>Registre uma entrada ou um gasto para começar.</div></div></div>
           </article>
         </div>
 
         <div class="stack right-stack">
           <article class="panel health-card">
-            <div class="health-row"><div class="health-ring"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="40"/><circle id="health-score-ring" class="score" cx="50" cy="50" r="40"/><circle id="health-dot" class="score-dot" cx="84" cy="29" r="5"/></svg><b id="health-score">82</b></div><div class="health-copy"><h2>Pulso financeiro</h2><p id="health-status">Seu dinheiro está em um ritmo muito bom.</p></div></div>
-            <div class="health-control"><label for="saving-rate"><span>Quanto você guarda</span><output id="saving-output">39%</output></label><input id="saving-rate" type="range" min="0" max="50" value="39" aria-label="Percentual da renda guardado"></div>
-            <div class="insight"><strong id="insight-title">Boa escolha neste mês</strong><span id="insight-text">Nesse ritmo, sua reserva chega ao objetivo 4 meses antes.</span></div>
+            <div class="health-row"><div class="health-ring"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="40"/><circle id="health-score-ring" class="score" cx="50" cy="50" r="40"/><circle id="health-dot" class="score-dot" cx="50" cy="10" r="5"/></svg><b id="health-score">0</b></div><div class="health-copy"><h2>Pulso financeiro</h2><p id="health-status">Adicione seus números para calcular sua saúde financeira.</p></div></div>
+            <div class="health-control"><label><span>Percentual disponível</span><output id="saving-output">0%</output></label></div>
+            <div class="insight"><strong id="insight-title">Seu painel começa zerado</strong><span id="insight-text">As análises aparecem conforme você registra entradas e saídas.</span></div>
           </article>
           <article class="panel panel-pad" id="budget">
-            <div class="panel-head"><div><h2>Orçamento</h2><p>Setembro · 18 dias restantes</p></div></div>
-            <div class="budget-list">
-              <div class="budget-row" data-name="Alimentação" data-limit="1200"><div class="budget-top"><strong>Alimentação</strong><span class="money budget-amount">R$ 920 / 1.200</span></div><div class="bar coral"><i style="width:77%"></i></div><div class="budget-foot"><span class="budget-remaining">R$ 280 disponíveis</span><span>77%</span></div><input class="budget-slider" type="range" min="0" max="1200" value="920" aria-label="Gasto em alimentação"></div>
-              <div class="budget-row" data-name="Casa" data-limit="2000"><div class="budget-top"><strong>Casa</strong><span class="money budget-amount">R$ 1.480 / 2.000</span></div><div class="bar violet"><i style="width:74%"></i></div><div class="budget-foot"><span class="budget-remaining">R$ 520 disponíveis</span><span>74%</span></div><input class="budget-slider" type="range" min="0" max="2000" value="1480" aria-label="Gasto com casa"></div>
-              <div class="budget-row" data-name="Lazer" data-limit="700"><div class="budget-top"><strong>Lazer</strong><span class="money budget-amount">R$ 310 / 700</span></div><div class="bar sky"><i style="width:44%"></i></div><div class="budget-foot"><span class="budget-remaining">R$ 390 disponíveis</span><span>44%</span></div><input class="budget-slider" type="range" min="0" max="700" value="310" aria-label="Gasto com lazer"></div>
-            </div>
+            <div class="panel-head"><div><h2>Orçamento</h2><p id="budget-period">Mês atual</p></div></div>
+            <div class="budget-list" id="budget-list"><div class="empty-state"><div><strong>Orçamento zerado</strong>Seus gastos aparecerão aqui, separados por categoria.</div></div></div>
           </article>
           <article class="panel panel-pad" id="goals">
             <div class="panel-head"><div><h2>Metas em andamento</h2><p>Construindo o seu amanhã</p></div></div>
-            <div class="goal" data-current="14200" data-target="24000"><div class="goal-icon"><svg width="21" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 10h16v9H4zM7 10V7h10v3M12 7V4"/></svg></div><div><strong>Reserva de emergência</strong><small class="money goal-value">R$ 14.200 de R$ 24.000</small><div class="goal-progress"><i style="width:59%"></i></div></div><button class="goal-action">+ R$ 250</button></div>
-            <div class="goal" data-current="3850" data-target="8000"><div class="goal-icon violet"><svg width="21" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 17h16M6 17l2-9h8l2 9M9 8V5h6v3"/></svg></div><div><strong>Viagem para o Chile</strong><small class="money goal-value">R$ 3.850 de R$ 8.000</small><div class="goal-progress"><i style="width:48%;background:var(--violet)"></i></div></div><button class="goal-action">+ R$ 250</button></div>
+            <div class="empty-state"><div><strong>Nenhuma meta criada</strong>Esta área está pronta para receber suas metas, sem valores de exemplo.</div></div>
           </article>
         </div>
       </section>
@@ -690,7 +696,7 @@
         </div>
         <div class="quotes-foot">
           <div class="quotes-meta"><strong id="quotes-updated">Buscando as cotações mais recentes…</strong>Dados de mercado com cache de até 1 minuto. Referência informativa, não recomendação de investimento.</div>
-          <div class="quote-converter" aria-label="Conversor de cotações"><label for="conversion-amount">Quanto dá?</label><input id="conversion-amount" type="number" min="0" step="10" value="1000" aria-label="Valor em reais"><select id="conversion-asset" aria-label="Moeda para converter"><option value="USD">Dólar</option><option value="EUR">Euro</option><option value="BTC">Bitcoin</option></select><output class="conversion-result" id="conversion-result">Aguardando cotação</output></div>
+          <div class="quote-converter" aria-label="Conversor de moedas"><label for="conversion-amount">Valor</label><input id="conversion-amount" type="number" min="0" step="10" value="1000" aria-label="Valor para converter"><div class="conversion-route"><label>De<select id="conversion-from" aria-label="Moeda de origem"><option value="BRL">Real</option><option value="USD">Dólar</option><option value="EUR">Euro</option><option value="BTC">Bitcoin</option></select></label><button class="swap-currency" id="swap-currency" aria-label="Inverter moedas">⇄</button><label>Para<select id="conversion-to" aria-label="Moeda de destino"><option value="EUR">Euro</option><option value="USD">Dólar</option><option value="BRL">Real</option><option value="BTC">Bitcoin</option></select></label></div><output class="conversion-result" id="conversion-result">Aguardando cotação</output></div>
         </div>
         <div class="economic-calendar" aria-labelledby="economic-title">
           <div class="economic-head">
@@ -764,12 +770,16 @@
 
   <script src="assets/d3.v7.min.js"></script>
   <script>
-    const state = { hidden: false, filter: 'all', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month' };
+    const state = { hidden: false, filter: 'all', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month', transactions: [] };
     const dialog = document.getElementById('transaction-dialog');
     const form = document.getElementById('transaction-form');
     const list = document.getElementById('transaction-list');
     const dateInput = document.getElementById('date');
     dateInput.valueAsDate = new Date();
+    const now = new Date();
+    document.getElementById('today-label').textContent = now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}).replace(/^./,character=>character.toUpperCase());
+    const daysRemaining = new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-now.getDate();
+    document.getElementById('budget-period').textContent = `${now.toLocaleDateString('pt-BR',{month:'long'}).replace(/^./,character=>character.toUpperCase())} · ${daysRemaining} dia${daysRemaining===1?'':'s'} restante${daysRemaining===1?'':'s'}`;
 
     document.getElementById('open-dialog').addEventListener('click', () => dialog.showModal());
     document.getElementById('close-dialog').addEventListener('click', () => dialog.close());
@@ -792,7 +802,7 @@
       clearTimeout(showToast.timer);
       showToast.timer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
-    function addTransaction({ type, value, amount: storedAmount, description, category, date }) {
+    function addTransaction({ id, type, value, amount: storedAmount, description, category, date }, refresh = true) {
       const amount = parseMoney(value ?? storedAmount);
       const safeDescription = String(description || '').trim();
       if (!safeDescription) throw new Error('Informe uma descrição.');
@@ -804,14 +814,44 @@
       row.innerHTML = `<div class="tx-icon ${incoming ? 'in' : ''}"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg></div><div><div class="tx-name"></div><div class="tx-meta"></div></div><div class="tx-amount ${incoming ? 'in' : ''} money">${incoming ? '+' : '−'} ${formatMoney(amount)}<div class="tx-status">Adicionado agora</div></div>`;
       row.querySelector('.tx-name').textContent = safeDescription;
       row.querySelector('.tx-meta').textContent = `${category || 'Outros'} · ${formattedDate}`;
+      list.querySelector('.empty-state')?.remove();
       list.prepend(row);
-      if (!incoming) {
-        const budgetRow = [...document.querySelectorAll('.budget-row')].find(item => item.dataset.name === category);
-        if (budgetRow) updateBudget(budgetRow, Number(budgetRow.querySelector('.budget-slider').value) + amount);
-      }
+      state.transactions.push({ id, type, amount, description:safeDescription, category:category || 'Outros', date:date || null });
       if (state.hidden) row.querySelector('.money').classList.add('hidden-value');
       document.getElementById('transaction-count').textContent = `${list.children.length} lançamentos recentes`;
+      if (refresh) renderFinancialSummary();
       return { type, amount, description: safeDescription, category: category || 'Outros', date: date || null };
+    }
+
+    function financialTotals() {
+      return state.transactions.reduce((totals,item) => {
+        if (item.type === 'income') totals.income += Number(item.amount) || 0;
+        else totals.expense += Number(item.amount) || 0;
+        return totals;
+      }, { income:0, expense:0 });
+    }
+    function renderBudgetFromTransactions() {
+      const budgetList = document.getElementById('budget-list');
+      const categories = {};
+      state.transactions.filter(item => item.type === 'expense').forEach(item => { categories[item.category] = (categories[item.category] || 0) + item.amount; });
+      const entries = Object.entries(categories).sort((a,b) => b[1]-a[1]);
+      if (!entries.length) { budgetList.innerHTML = '<div class="empty-state"><div><strong>Orçamento zerado</strong>Seus gastos aparecerão aqui, separados por categoria.</div></div>'; return; }
+      const maximum = Math.max(...entries.map(([,value]) => value),1);
+      budgetList.innerHTML = entries.map(([category,value]) => `<div class="budget-row"><div class="budget-top"><strong></strong><span class="money budget-amount">${formatMoney(value)}</span></div><div class="bar"><i style="width:${Math.round(value/maximum*100)}%"></i></div><div class="budget-foot"><span>Total registrado</span><span>${Math.round(value/financialTotals().expense*100)}%</span></div></div>`).join('');
+      [...budgetList.children].forEach((row,index) => row.querySelector('strong').textContent = entries[index][0]);
+    }
+    function renderFinancialSummary() {
+      const totals = financialTotals();
+      const balance = totals.income - totals.expense;
+      document.getElementById('summary-balance').textContent = formatMoney(balance);
+      document.getElementById('summary-income').textContent = formatMoney(totals.income);
+      document.getElementById('summary-expense').textContent = formatMoney(totals.expense);
+      document.getElementById('summary-balance-note').textContent = state.transactions.length ? `${state.transactions.length} movimentação${state.transactions.length === 1 ? '' : 'ões'} salva${state.transactions.length === 1 ? '' : 's'}` : 'Adicione sua primeira movimentação';
+      document.getElementById('summary-income-note').textContent = totals.income ? 'Total das entradas registradas' : 'Nenhuma entrada registrada';
+      document.getElementById('summary-expense-note').textContent = totals.expense ? `${formatMoney(Math.max(balance,0))} disponíveis` : 'Nenhum gasto registrado';
+      updateHealthFromTransactions(totals);
+      renderBudgetFromTransactions();
+      if (typeof rebuildChartData === 'function') rebuildChartData();
     }
 
     form.addEventListener('submit', async (event) => {
@@ -832,7 +872,13 @@
         const response = await fetch('/api/transactions');
         if (!response.ok) return;
         const payload = await response.json();
-        [...(payload.transactions || [])].reverse().forEach(addTransaction);
+        list.innerHTML = '';
+        state.transactions = [];
+        const transactions = payload.transactions || [];
+        [...transactions].reverse().forEach(item => addTransaction(item,false));
+        if (!transactions.length) list.innerHTML = '<div class="empty-state"><div><strong>Nenhuma movimentação ainda</strong>Registre uma entrada ou um gasto para começar.</div></div>';
+        document.getElementById('transaction-count').textContent = transactions.length ? `${transactions.length} lançamentos recentes` : 'Seu histórico começa aqui';
+        renderFinancialSummary();
       } catch (_) {}
     }
     hydrateTransactions();
@@ -847,15 +893,21 @@
       [...list.children].forEach(row => row.hidden = state.filter !== 'all' && row.dataset.type !== state.filter);
       event.currentTarget.textContent = state.filter === 'all' ? 'Mostrar entradas' : 'Mostrar tudo';
     });
-    document.querySelectorAll('[data-target]').forEach(button => button.addEventListener('click', () => {
-      const target = document.getElementById(button.dataset.target);
-      target?.scrollIntoView({ behavior: 'smooth', block: button.dataset.target === 'overview' ? 'start' : 'center' });
-      const scope = button.closest('nav') || button.closest('.nav');
-      scope?.querySelectorAll('[data-target]').forEach(item => item.classList.toggle('active', item === button));
-    }));
+    function showView(target) {
+      document.body.dataset.view = target;
+      document.querySelectorAll('[data-target]').forEach(item => item.classList.toggle('active', item.dataset.target === target));
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+    document.querySelectorAll('[data-target]').forEach(button => button.addEventListener('click', () => showView(button.dataset.target)));
 
-    const scrollToQuotes = () => document.getElementById('quotes')?.scrollIntoView({ behavior:'smooth', block:'center' });
+    const scrollToQuotes = () => showView('quotes');
     document.getElementById('market-link').addEventListener('click', scrollToQuotes);
+    document.getElementById('reset-data').addEventListener('click', async () => {
+      if (!confirm('Zerar todas as movimentações e compromissos desta conta? Essa ação não pode ser desfeita.')) return;
+      const responses = await Promise.all([fetch('/api/transactions',{method:'DELETE'}),fetch('/api/events',{method:'DELETE'})]);
+      if (responses.some(response => !response.ok)) { showToast('Não foi possível zerar os dados agora.'); return; }
+      location.reload();
+    });
 
     function initMarketGlobe() {
       const canvas = document.getElementById('market-globe');
@@ -1020,12 +1072,15 @@
     const quoteFormat = (value, symbol) => Number(value).toLocaleString('pt-BR', { style:'currency', currency:'BRL', minimumFractionDigits:symbol === 'BTC' ? 0 : 4, maximumFractionDigits:symbol === 'BTC' ? 0 : 4 });
     function renderConversion() {
       const amount = Math.max(0, Number(document.getElementById('conversion-amount').value) || 0);
-      const symbol = document.getElementById('conversion-asset').value;
-      const rate = liveQuotes[symbol]?.bid;
+      const from = document.getElementById('conversion-from').value;
+      const to = document.getElementById('conversion-to').value;
+      const rates = { BRL:1, USD:liveQuotes.USD?.bid, EUR:liveQuotes.EUR?.bid, BTC:liveQuotes.BTC?.bid };
       const output = document.getElementById('conversion-result');
-      if (!rate) { output.textContent = 'Aguardando cotação'; return; }
-      const converted = amount / rate;
-      output.textContent = symbol === 'BTC' ? `${converted.toLocaleString('pt-BR',{maximumFractionDigits:8})} BTC` : `${converted.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} ${symbol}`;
+      if (!rates[from] || !rates[to]) { output.textContent = 'Aguardando cotação'; return; }
+      const converted = amount * rates[from] / rates[to];
+      const labels = { BRL:'R$', USD:'US$', EUR:'€', BTC:'BTC' };
+      const digits = to === 'BTC' ? 8 : 2;
+      output.textContent = `${labels[to]} ${converted.toLocaleString('pt-BR',{minimumFractionDigits:to === 'BTC' ? 2 : 2,maximumFractionDigits:digits})}`;
     }
     function renderQuote(symbol, item) {
       const bid = Number(item.bid), change = Number(item.pctChange ?? item.change), low = Number(item.low), high = Number(item.high);
@@ -1065,7 +1120,12 @@
     } catch (_) {}
     document.getElementById('refresh-quotes').addEventListener('click', refreshQuotes);
     document.getElementById('conversion-amount').addEventListener('input', renderConversion);
-    document.getElementById('conversion-asset').addEventListener('change', renderConversion);
+    document.getElementById('conversion-from').addEventListener('change', renderConversion);
+    document.getElementById('conversion-to').addEventListener('change', renderConversion);
+    document.getElementById('swap-currency').addEventListener('click', () => {
+      const from = document.getElementById('conversion-from'), to = document.getElementById('conversion-to');
+      [from.value,to.value] = [to.value,from.value]; renderConversion();
+    });
     refreshQuotes();
 
     const economicEvents = [
@@ -1105,11 +1165,27 @@
     });
     updateEconomicControls();
 
-    const chartData = {
-      '3M': { labels:['JUL','AGO','SET'], income:[7200,8150,8950], expense:[5100,4980,5420.8], subtitle:'Uma visão mais próxima dos últimos três meses' },
-      '6M': { labels:['ABR','MAI','JUN','JUL','AGO','SET'], income:[6100,7000,6500,8200,7600,8950], expense:[4100,4600,4400,5100,4950,5420.8], subtitle:'Entradas e saídas dos últimos seis meses' },
-      '1A': { labels:['OUT','NOV','DEZ','JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET'], income:[5800,6300,9200,6500,6800,7100,6100,7000,6500,8200,7600,8950], expense:[4300,4700,6800,5100,4950,5200,4100,4600,4400,5100,4950,5420.8], subtitle:'O panorama completo dos últimos doze meses' }
-    };
+    function periodData(months, subtitle) {
+      const labels=[], income=[], expense=[];
+      for(let offset=months-1;offset>=0;offset--) {
+        const date=new Date(); date.setDate(1); date.setMonth(date.getMonth()-offset);
+        const key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
+        labels.push(date.toLocaleDateString('pt-BR',{month:'short'}).replace('.','').toUpperCase());
+        const monthItems=state.transactions.filter(item=>String(item.date||'').startsWith(key));
+        income.push(monthItems.filter(item=>item.type==='income').reduce((sum,item)=>sum+item.amount,0));
+        expense.push(monthItems.filter(item=>item.type==='expense').reduce((sum,item)=>sum+item.amount,0));
+      }
+      return { labels,income,expense,subtitle };
+    }
+    let chartData = {};
+    function rebuildChartData() {
+      chartData = {
+        '3M':periodData(3,'Uma visão mais próxima dos últimos três meses'),
+        '6M':periodData(6,'Entradas e saídas dos últimos seis meses'),
+        '1A':periodData(12,'O panorama completo dos últimos doze meses')
+      };
+      updateChart(state.chartPeriod);
+    }
     function chartPoints(values) {
       const max = Math.max(...values) * 1.08;
       const min = Math.min(...values) * .82;
@@ -1127,8 +1203,8 @@
       const data = chartData[period];
       state.chartPeriod = period;
       const combined = [...data.income,...data.expense];
-      const ceiling = Math.max(...combined) * 1.08;
-      const floor = Math.min(...combined) * .82;
+      const ceiling = Math.max(...combined,1) * 1.08;
+      const floor = 0;
       const makePoints = values => values.map((value,index) => ({ x:index * (720/(values.length-1)), y:175-((value-floor)/(ceiling-floor))*140 }));
       const incomePoints = makePoints(data.income);
       const expensePoints = makePoints(data.expense);
@@ -1151,7 +1227,9 @@
       document.querySelector('.chart-wrap svg').setAttribute('aria-label', `Gráfico de entradas e saídas: período ${period}`);
       const lastBalance = data.income.at(-1)-data.expense.at(-1);
       const firstBalance = data.income[0]-data.expense[0];
+      const trendValue = firstBalance ? (lastBalance-firstBalance)/Math.abs(firstBalance)*100 : 0;
       document.getElementById('chart-balance-head').textContent = formatMoney(lastBalance);
+      document.getElementById('chart-trend').textContent = `${trendValue > 0 ? '↗ +' : trendValue < 0 ? '↘ ' : ''}${trendValue.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})}%`;
       document.getElementById('chart-delta').textContent = `${lastBalance-firstBalance >= 0 ? '+' : '−'} ${formatMoney(Math.abs(lastBalance-firstBalance)).replace(',00','')}`;
       document.getElementById('chart-peak').textContent = formatMoney(Math.max(...data.income)).replace(',00','');
       document.getElementById('chart-low').textContent = formatMoney(Math.min(...data.income)).replace(',00','');
@@ -1189,12 +1267,11 @@
       tooltip.classList.add('show');
     });
     chartInteractive.addEventListener('pointerleave', () => document.getElementById('chart-tooltip').classList.remove('show'));
-    updateChart('6M');
+    rebuildChartData();
 
-    const savingRate = document.getElementById('saving-rate');
-    function updateHealth(value) {
-      const rate = Number(value);
-      const score = Math.min(96, Math.round(58 + rate * .62));
+    function updateHealthFromTransactions(totals = financialTotals()) {
+      const rate = totals.income > 0 ? Math.max(0,Math.min(100,Math.round((totals.income-totals.expense)/totals.income*100))) : 0;
+      const score = totals.income > 0 ? Math.max(0,Math.min(100,Math.round(40 + rate*.6))) : 0;
       const circumference = 2 * Math.PI * 40;
       const progress = circumference * score / 100;
       document.getElementById('health-score').textContent = score;
@@ -1203,36 +1280,12 @@
       const angle = (-90 + 360 * score / 100) * Math.PI / 180;
       document.getElementById('health-dot').setAttribute('cx', 50 + 40*Math.cos(angle));
       document.getElementById('health-dot').setAttribute('cy', 50 + 40*Math.sin(angle));
-      const status = score >= 82 ? 'Seu dinheiro está em um ritmo excelente.' : score >= 70 ? 'Seu dinheiro está ganhando estabilidade.' : 'Há espaço para recuperar o ritmo.';
+      const status = !state.transactions.length ? 'Adicione seus números para calcular sua saúde financeira.' : score >= 82 ? 'Seu dinheiro está em um ritmo excelente.' : score >= 70 ? 'Seu dinheiro está ganhando estabilidade.' : 'Há espaço para recuperar o ritmo.';
       document.getElementById('health-status').textContent = status;
-      document.getElementById('insight-title').textContent = rate >= 30 ? 'O tempo está jogando a seu favor' : 'Um pequeno ajuste muda o caminho';
-      document.getElementById('insight-text').textContent = rate >= 30 ? `Guardando ${rate}%, sua reserva pode chegar ao objetivo antes do prazo.` : `Subir para ${Math.min(rate+5,50)}% já melhora sua margem para imprevistos.`;
+      document.getElementById('insight-title').textContent = !state.transactions.length ? 'Seu painel começa zerado' : rate >= 30 ? 'O tempo está jogando a seu favor' : 'Um pequeno ajuste muda o caminho';
+      document.getElementById('insight-text').textContent = !state.transactions.length ? 'As análises aparecem conforme você registra entradas e saídas.' : rate >= 30 ? `${rate}% das entradas continuam disponíveis.` : 'Revise as maiores categorias de gasto para recuperar sua margem.';
     }
-    savingRate.addEventListener('input', event => updateHealth(event.target.value));
-
-    function updateBudget(row, spent) {
-      const limit = Number(row.dataset.limit);
-      const safeSpent = Math.max(0, Math.min(Number(spent), limit));
-      const percentage = Math.round(safeSpent/limit*100);
-      row.querySelector('.budget-amount').textContent = `${formatMoney(safeSpent).replace(',00','')} / ${formatMoney(limit).replace(',00','').replace('R$ ','')}`;
-      row.querySelector('.budget-remaining').textContent = `${formatMoney(limit-safeSpent).replace(',00','')} disponíveis`;
-      row.querySelector('.budget-foot span:last-child').textContent = `${percentage}%`;
-      row.querySelector('.bar i').style.width = `${percentage}%`;
-      row.querySelector('.budget-slider').value = safeSpent;
-      return { category:row.dataset.name, spent:safeSpent, limit, percentage };
-    }
-    document.querySelectorAll('.budget-row').forEach(row => row.querySelector('.budget-slider').addEventListener('input', event => updateBudget(row,event.target.value)));
-
-    document.querySelectorAll('.goal-action').forEach(button => button.addEventListener('click', () => {
-      const goal = button.closest('.goal');
-      const target = Number(goal.dataset.target);
-      const current = Math.min(target, Number(goal.dataset.current) + 250);
-      goal.dataset.current = current;
-      goal.querySelector('.goal-value').textContent = `${formatMoney(current).replace(',00','')} de ${formatMoney(target).replace(',00','')}`;
-      goal.querySelector('.goal-progress i').style.width = `${Math.round(current/target*100)}%`;
-      showToast('R$ 250 adicionados à meta');
-    }));
-    updateHealth(savingRate.value);
+    updateHealthFromTransactions();
 
     const calendarState = { current:new Date(new Date().getFullYear(),new Date().getMonth(),1), selected:new Date(), events:[] };
     const eventDialog = document.getElementById('event-dialog');
@@ -1243,15 +1296,7 @@
       const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,'0'), d=String(date.getDate()).padStart(2,'0');
       return `${y}-${m}-${d}`;
     }
-    function loadCalendarEvents() {
-      const today = new Date();
-      const later = new Date(today); later.setDate(today.getDate()+2);
-      return [
-        { id:'sample-1',title:'Revisar fatura do cartão',date:dateKey(today),time:'09:30',category:'Financeiro',duration:'30 min',note:'Conferir compras parceladas' },
-        { id:'sample-2',title:'Treino funcional',date:dateKey(today),time:'18:30',category:'Saúde',duration:'1 hora',note:'' },
-        { id:'sample-3',title:'Reunião do projeto',date:dateKey(later),time:'14:00',category:'Trabalho',duration:'1 hora',note:'Levar atualização do cronograma' }
-      ];
-    }
+    function loadCalendarEvents() { return []; }
     calendarState.events = loadCalendarEvents();
     function addCalendarEvent(input) {
       const event = { id:input.id||`event-${Date.now()}`,title:String(input.title||'').trim(),date:input.date,time:input.time||'09:00',category:input.category||'Pessoal',duration:input.duration||'1 hora',note:String(input.note||'').trim() };
@@ -1357,19 +1402,19 @@
         description: 'Adiciona uma entrada ou saída ao painel financeiro e atualiza a lista visível.',
         inputSchema: { type:'object', properties:{ type:{type:'string',enum:['income','expense']}, value:{type:'number',exclusiveMinimum:0}, description:{type:'string',minLength:1}, category:{type:'string'}, date:{type:'string'} }, required:['type','value','description'], additionalProperties:false },
         annotations:{ readOnlyHint:false, untrustedContentHint:false },
-        execute(input) { const result = addTransaction(input); showToast('Movimentação adicionada'); return { status:'added', transaction:result }; }
+        async execute(input) { const response=await fetch('/api/transactions',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...input,amount:input.value,date:input.date||dateKey(new Date())})}); const payload=await response.json(); if(!response.ok) throw new Error(payload.error||'Não foi possível salvar.'); const result=addTransaction(payload.transaction); showToast('Movimentação adicionada'); return { status:'added', transaction:result }; }
       }, {
         name:'read_financial_summary', title:'Ler resumo financeiro',
         description:'Retorna o resumo financeiro atualmente exibido no painel.',
         inputSchema:{ type:'object', properties:{}, additionalProperties:false },
         annotations:{ readOnlyHint:true, untrustedContentHint:false },
-        execute() { return { netWorth:42680.90, monthlyIncome:8950, monthlyExpenses:5420.80, financialHealthScore:82, currency:'BRL' }; }
+        execute() { const totals=financialTotals(); return { balance:totals.income-totals.expense, income:totals.income, expenses:totals.expense, currency:'BRL' }; }
       }, {
         name:'add_calendar_event', title:'Adicionar compromisso',
         description:'Adiciona um compromisso à agenda do Aion e atualiza o calendário visível.',
         inputSchema:{ type:'object', properties:{ title:{type:'string',minLength:1}, date:{type:'string',pattern:'^\\d{4}-\\d{2}-\\d{2}$'}, time:{type:'string'}, category:{type:'string',enum:['Pessoal','Trabalho','Financeiro','Saúde']}, duration:{type:'string'}, note:{type:'string'} }, required:['title','date'], additionalProperties:false },
         annotations:{ readOnlyHint:false, untrustedContentHint:false },
-        execute(input) { const event=addCalendarEvent(input); showToast('Compromisso salvo na agenda'); return {status:'saved',event}; }
+        async execute(input) { const response=await fetch('/api/events',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)}); const payload=await response.json(); if(!response.ok) throw new Error(payload.error||'Não foi possível salvar.'); const event=addCalendarEvent(payload.event); showToast('Compromisso salvo na agenda'); return {status:'saved',event}; }
       }, {
         name:'read_calendar_day', title:'Ler agenda do dia',
         description:'Retorna os compromissos salvos para uma data no formato AAAA-MM-DD.',
