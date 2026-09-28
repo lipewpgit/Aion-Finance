@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#11162b">
+  <meta name="theme-color" content="#050506">
   <meta name="description" content="Aion Finance — clareza para organizar contas, orçamento e metas em um só lugar.">
   <title>Aion Finance — Seu dinheiro, no tempo certo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2311162b'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%2378e7c7' stroke-width='5' stroke-dasharray='86 40' stroke-linecap='round'/%3E%3Cpath d='M23 42 32 19l9 23-9-6z' fill='%23f6f7fb'/%3E%3C/svg%3E">
   <style>
     :root {
@@ -448,6 +451,106 @@
       .economic-event { flex-basis:min(272px,calc(100vw - 82px)); }
       .economic-footer { align-items:flex-start; flex-direction:column; }
     }
+    /* Unified dark workspace: mirrors the black, white and graphite language of the entry page. */
+    :root {
+      --ink:#f6f6f4; --ink-2:#d6d7dc; --canvas:#050506; --paper:#0f1013;
+      --white:#ffffff; --mint:#78e7c7; --violet:#f1f1ef; --coral:#ff8f81;
+      --sky:#aeb5c1; --gold:#e9c66c; --muted:#9699a4; --line:#26272d;
+      --shadow:0 24px 70px rgba(0,0,0,.38);
+    }
+    body {
+      color:var(--ink);
+      background:radial-gradient(circle at 77% -12%,rgba(255,255,255,.055),transparent 31rem),#050506;
+      font-family:"Poppins","Segoe UI",system-ui,sans-serif;
+    }
+    .sidebar { background:#050506; border-right:1px solid rgba(255,255,255,.075); }
+    .sidebar::after { border-color:rgba(120,231,199,.12); box-shadow:0 0 0 32px rgba(120,231,199,.018),0 0 0 64px rgba(120,231,199,.012); }
+    .brand strong,.balance-value,.mini-value,h1,.panel-head h2,.metric-heading h2,.metric-kpi,.calendar-title-row h2,.agenda-head h2,.health-ring b,.health-copy h2,.market-copy h2,.quotes-head h2,.quote-value,.economic-title h3,.dialog-head h2 { font-family:"Poppins","Segoe UI",sans-serif; }
+    .brand strong { font-weight:600; }
+    h1 { font-weight:500; letter-spacing:-.045em; }
+    main { background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 27rem); }
+    .icon-button,.ghost-button { color:var(--ink); border-color:var(--line); background:#111216; }
+    .primary-button { color:#050506; border-color:#fff; background:linear-gradient(180deg,#fff,#d9d9d7); box-shadow:0 12px 28px rgba(255,255,255,.09); }
+    .balance-card { border:1px solid rgba(255,255,255,.10); border-radius:22px; background:radial-gradient(circle at 82% 4%,rgba(120,231,199,.12),transparent 27%),linear-gradient(145deg,#111216,#090a0c); box-shadow:var(--shadow); }
+    .balance-card::before { background:radial-gradient(circle at 42% 130%,rgba(255,255,255,.055),transparent 45%); }
+    .balance-label { color:var(--muted); }
+    .mini-card,.mini-card:last-child { color:var(--ink); border:1px solid var(--line); border-radius:22px; background:#0e0f12; box-shadow:var(--shadow); }
+    .mini-card::after { border-color:rgba(255,255,255,.035); }
+    .mini-icon,.mini-icon.out { background:rgba(255,255,255,.06); }
+    .mini-icon { color:var(--mint); }
+    .mini-icon.out { color:var(--coral); }
+    .mini-note b { color:var(--mint); }
+    .panel,.quotes-section { color:var(--ink); border:1px solid var(--line); background:rgba(14,15,18,.96); box-shadow:var(--shadow); }
+    .metric-card { background:radial-gradient(circle at 78% 0%,rgba(255,255,255,.055),transparent 32%),#0e0f12; }
+    .metric-card::after { opacity:.18; background-image:radial-gradient(circle,rgba(255,255,255,.3) 1px,transparent 1px); }
+    .segmented,.view-toggle { border-color:var(--line); background:#08090b; }
+    .segmented button.active,.view-toggle button.active { color:#050506; background:#fff; box-shadow:none; }
+    .view-toggle button { color:#727580; }
+    .view-toggle button.active { color:#050506; }
+    .chart-grid line { stroke:#292a30; }
+    .chart-legend { border-top-color:var(--line); }
+    .chart-legend i { background:#f6f6f4; }
+    .chart-legend strong,.metric-stats b { color:var(--ink); }
+    #income-line { stroke:#f6f6f4; }
+    #income-dot { fill:#f6f6f4; stroke:#0e0f12; }
+    #expense-dot { stroke:#0e0f12; }
+    #area stop:first-child { stop-color:#f6f6f4; stop-opacity:.12; }
+    .metric-footer { border-top-color:var(--line); background:#0a0b0d; }
+    .metric-trend,.metric-delta b,.tx-amount.in { color:var(--mint); }
+    .health-card,.calendar-glass,.market-portal { border:1px solid var(--line); background:radial-gradient(circle at 88% 0%,rgba(255,255,255,.055),transparent 30%),linear-gradient(145deg,#111216,#08090b); box-shadow:var(--shadow); }
+    .health-ring .score-dot { stroke:#111216; }
+    .calendar-glass::before,.market-portal::before { background:linear-gradient(115deg,rgba(255,255,255,.035),transparent 34%); }
+    .calendar-mode,.month-nav button,.calendar-settings,.calendar-add { background:#08090b; }
+    .calendar-mode button.active { color:#050506; background:#fff; }
+    .calendar-day.selected { color:#050506; background:linear-gradient(180deg,#fff,#cfcfcd); box-shadow:0 10px 25px rgba(255,255,255,.10); }
+    .calendar-day.has-events::before { background:var(--mint); }
+    .agenda-count { color:#050506; background:#fff; }
+    .agenda-item,.economic-event,.quote-card,.quote-card[data-symbol="BTC"] { color:var(--ink); border-color:var(--line); background:#111216; box-shadow:none; }
+    .agenda-item:hover,.economic-event:hover,.transaction:hover { background:#15161a; }
+    .agenda-time { color:#c6c8d0; }
+    .agenda-empty { border-color:#34353d; }
+    .agenda-empty strong { color:var(--ink); }
+    .transaction { border-top-color:var(--line); }
+    .tx-icon,.tx-icon.in,.goal-icon,.goal-icon.violet { color:#d8d9de; background:#1b1c21; }
+    .tx-icon.in,.goal-icon { color:var(--mint); }
+    .tx-status { font-family:"Poppins","Segoe UI",sans-serif; }
+    .bar,.goal-progress { background:#25262c; }
+    .bar.coral i { background:#f1f1ef; }
+    .bar.violet i { background:#b5b7c0; }
+    .bar.sky i { background:#767985; }
+    .goal-progress i[style] { background:#f1f1ef!important; }
+    .agenda-item[data-category="Saúde"] i,.agenda-item[data-category="Trabalho"] i { background:#8d909a; }
+    .goal + .goal { border-top-color:var(--line); }
+    .goal-action { color:var(--ink); border-color:var(--line); background:#17181c; }
+    .goal-action:hover { background:#202127; }
+    .market-live { color:#b7bac4; }
+    .market-copy p,.globe-instruction { color:var(--muted); }
+    .market-link { color:#050506; background:linear-gradient(180deg,#fff,#d7d7d5); border-color:#fff; }
+    .quotes-section { background:#0b0c0f; }
+    .refresh-quotes,.economic-controls button { color:var(--ink); border-color:var(--line); background:#141519; }
+    .refresh-quotes:hover,.economic-controls button:hover:not(:disabled) { background:#1b1c21; }
+    .quote-card::after { border-color:rgba(255,255,255,.025); }
+    .quote-mark,.quote-card[data-symbol="EUR"] .quote-mark,.quote-card[data-symbol="BTC"] .quote-mark { color:#f4f4f2; background:#222329; }
+    .quote-card[data-symbol="EUR"] .quote-mark { color:var(--mint); }
+    .quote-card[data-symbol="BTC"] .quote-mark { color:var(--gold); }
+    .quote-symbol small,.quote-card[data-symbol="BTC"] .quote-symbol small,.quote-range,.quote-card[data-symbol="BTC"] .quote-range { color:var(--muted); }
+    .quote-change { color:var(--mint); background:rgba(120,231,199,.09); }
+    .quote-change.down { color:var(--coral); background:rgba(255,143,129,.09); }
+    .quotes-foot,.economic-calendar,.event-values { border-color:var(--line); }
+    .quotes-meta strong { color:var(--ink); }
+    .quote-converter input,.quote-converter select { color:var(--ink); border-color:var(--line); background:#15161a; }
+    .conversion-result,.event-values b.actual,.economic-footer button,.link-button { color:#f2f2f0; }
+    .economic-event:hover { border-color:#404149; box-shadow:none; }
+    .event-flag { border-color:var(--line); background:#191a1f; box-shadow:none; }
+    .event-values div + div { border-left-color:var(--line); }
+    .event-time { color:var(--coral); background:rgba(255,143,129,.09); }
+    dialog { color:var(--ink); border:1px solid var(--line); background:#0f1013; }
+    dialog::backdrop { background:rgba(0,0,0,.78); }
+    .dialog-head { border-bottom-color:var(--line); }
+    .close-button { color:var(--ink); background:#1b1c21; }
+    .field input,.field select { color:var(--ink); border-color:var(--line); background:#15161a; }
+    .toast { color:#050506; background:#fff; }
+    .mobile-bar { border:1px solid var(--line); background:rgba(5,5,6,.96); box-shadow:0 18px 50px rgba(0,0,0,.55); }
     @media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
   </style>
 </head>
@@ -798,27 +901,27 @@
         projection.rotate(rotation).scale(baseRadius * zoom);
         const centerX = width * .52, centerY = height * .5, radius = baseRadius * zoom;
         const ocean = context.createRadialGradient(centerX - radius * .32, centerY - radius * .35, radius * .08, centerX, centerY, radius);
-        ocean.addColorStop(0, '#29325c');
-        ocean.addColorStop(.58, '#141c38');
-        ocean.addColorStop(1, '#090e20');
+        ocean.addColorStop(0, '#292a2f');
+        ocean.addColorStop(.58, '#15161a');
+        ocean.addColorStop(1, '#08090b');
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, Math.PI * 2);
         context.fillStyle = ocean;
         context.fill();
-        context.strokeStyle = 'rgba(217,225,255,.62)';
+        context.strokeStyle = 'rgba(255,255,255,.48)';
         context.lineWidth = 1.2;
         context.stroke();
 
         context.beginPath();
         path(graticule);
-        context.strokeStyle = 'rgba(210,220,255,.12)';
+        context.strokeStyle = 'rgba(255,255,255,.10)';
         context.lineWidth = .75;
         context.stroke();
 
         if (land) {
           context.beginPath();
           path(land);
-          context.strokeStyle = 'rgba(210,220,255,.22)';
+          context.strokeStyle = 'rgba(255,255,255,.18)';
           context.lineWidth = .7;
           context.stroke();
           context.fillStyle = '#78e7c7';
@@ -836,8 +939,8 @@
         }
 
         const glow = context.createRadialGradient(centerX + radius * .32, centerY - radius * .35, 0, centerX + radius * .32, centerY - radius * .35, radius * .85);
-        glow.addColorStop(0, 'rgba(119,114,232,.17)');
-        glow.addColorStop(1, 'rgba(119,114,232,0)');
+        glow.addColorStop(0, 'rgba(255,255,255,.08)');
+        glow.addColorStop(1, 'rgba(255,255,255,0)');
         context.fillStyle = glow;
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -1059,7 +1162,7 @@
       barGroup.innerHTML = data.labels.map((_,index) => {
         const incomeY = incomePoints[index].y, expenseY = expensePoints[index].y;
         const x = index*slot + slot/2;
-        return `<rect x="${x-barWidth-2}" y="${incomeY}" width="${barWidth}" height="${190-incomeY}" rx="5" fill="#7772e8"/><rect x="${x+2}" y="${expenseY}" width="${barWidth}" height="${190-expenseY}" rx="5" fill="#69e0bc"/>`;
+          return `<rect x="${x-barWidth-2}" y="${incomeY}" width="${barWidth}" height="${190-incomeY}" rx="5" fill="#f1f1ef"/><rect x="${x+2}" y="${expenseY}" width="${barWidth}" height="${190-expenseY}" rx="5" fill="#78e7c7"/>`;
       }).join('');
     }
     document.querySelectorAll('.segmented button').forEach(button => button.addEventListener('click', () => {
