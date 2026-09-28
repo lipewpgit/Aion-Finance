@@ -74,6 +74,8 @@
     .avatar { display:grid; place-items:center; width: 34px; height:34px; border-radius: 50%; color: var(--ink); background: var(--mint); font-weight: 800; }
     .profile span { display: block; font-size: 13px; font-weight: 700; }
     .profile small { color: #95a0c1; font-size: 11px; }
+    .account-signout { display:inline-block; margin:10px 13px 0; color:#95a0c1; font-size:11px; text-decoration:none; }
+    .account-signout:hover { color:#fff; }
 
     main { min-width: 0; padding: 28px clamp(20px, 3vw, 44px) 48px; }
     .topbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 26px; }
@@ -687,8 +689,8 @@
       clearTimeout(showToast.timer);
       showToast.timer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
-    function addTransaction({ type, value, description, category, date }) {
-      const amount = parseMoney(value);
+    function addTransaction({ type, value, amount: storedAmount, description, category, date }) {
+      const amount = parseMoney(value ?? storedAmount);
       const safeDescription = String(description || '').trim();
       if (!safeDescription) throw new Error('Informe uma descrição.');
       const row = document.createElement('div');
@@ -709,17 +711,28 @@
       return { type, amount, description: safeDescription, category: category || 'Outros', date: date || null };
     }
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       try {
-        const result = addTransaction(Object.fromEntries(new FormData(form)));
-        try {
-          const stored = JSON.parse(localStorage.getItem('aion-transactions') || '[]');
-          localStorage.setItem('aion-transactions', JSON.stringify([result, ...stored].slice(0, 20)));
-        } catch (_) {}
+        const input = Object.fromEntries(new FormData(form));
+        const amount = parseMoney(input.value);
+        const response = await fetch('/api/transactions', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({ ...input, amount }) });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Não foi possível salvar a movimentação.');
+        addTransaction(payload.transaction);
         form.reset(); dateInput.valueAsDate = new Date(); dialog.close(); showToast('Movimentação adicionada');
       } catch (error) { showToast(error.message); }
     });
+
+    async function hydrateTransactions() {
+      try {
+        const response = await fetch('/api/transactions');
+        if (!response.ok) return;
+        const payload = await response.json();
+        [...(payload.transactions || [])].reverse().forEach(addTransaction);
+      } catch (_) {}
+    }
+    hydrateTransactions();
 
     document.getElementById('toggle-values').addEventListener('click', (event) => {
       state.hidden = !state.hidden;
@@ -1128,10 +1141,6 @@
       return `${y}-${m}-${d}`;
     }
     function loadCalendarEvents() {
-      try {
-        const saved = JSON.parse(localStorage.getItem('aion-events-v1') || '[]');
-        if (Array.isArray(saved) && saved.length) return saved;
-      } catch (_) {}
       const today = new Date();
       const later = new Date(today); later.setDate(today.getDate()+2);
       return [
@@ -1142,10 +1151,9 @@
     }
     calendarState.events = loadCalendarEvents();
     function addCalendarEvent(input) {
-      const event = { id:`event-${Date.now()}`,title:String(input.title||'').trim(),date:input.date,time:input.time||'09:00',category:input.category||'Pessoal',duration:input.duration||'1 hora',note:String(input.note||'').trim() };
+      const event = { id:input.id||`event-${Date.now()}`,title:String(input.title||'').trim(),date:input.date,time:input.time||'09:00',category:input.category||'Pessoal',duration:input.duration||'1 hora',note:String(input.note||'').trim() };
       if (!event.title || !/^\d{4}-\d{2}-\d{2}$/.test(event.date||'')) throw new Error('Informe o título e uma data válida.');
       calendarState.events.push(event);
-      try { localStorage.setItem('aion-events-v1',JSON.stringify(calendarState.events)); } catch (_) {}
       calendarState.selected = new Date(`${event.date}T12:00:00`);
       calendarState.current = new Date(calendarState.selected.getFullYear(),calendarState.selected.getMonth(),1);
       renderCalendar();
@@ -1201,9 +1209,15 @@
     document.getElementById('close-event').addEventListener('click',()=>eventDialog.close());
     document.getElementById('cancel-event').addEventListener('click',()=>eventDialog.close());
     eventDialog.addEventListener('click',event=>{if(event.target===eventDialog)eventDialog.close();});
-    eventForm.addEventListener('submit',event=>{
+    eventForm.addEventListener('submit',async event=>{
       event.preventDefault();
-      try { addCalendarEvent(Object.fromEntries(new FormData(eventForm))); eventForm.reset(); eventDialog.close(); showToast('Compromisso salvo na agenda'); }
+      try {
+        const input=Object.fromEntries(new FormData(eventForm));
+        const response=await fetch('/api/events',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});
+        const payload=await response.json();
+        if(!response.ok) throw new Error(payload.error||'Não foi possível salvar o compromisso.');
+        addCalendarEvent(payload.event); eventForm.reset(); eventDialog.close(); showToast('Compromisso salvo na agenda');
+      }
       catch(error){ showToast(error.message); }
     });
     document.getElementById('prev-month').addEventListener('click',()=>{
@@ -1223,6 +1237,14 @@
       renderCalendar();
     }));
     renderCalendar();
+    (async()=>{
+      try {
+        const response=await fetch('/api/events');
+        if(!response.ok) return;
+        const payload=await response.json();
+        if(Array.isArray(payload.events)&&payload.events.length){ calendarState.events=payload.events; renderCalendar(); }
+      } catch(_) {}
+    })();
 
     function registerWebMCP() {
       const context = document.modelContext;
