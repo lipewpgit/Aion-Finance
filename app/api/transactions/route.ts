@@ -14,7 +14,7 @@ export async function GET() {
   const user = await currentUser();
   if (!user) return Response.json({ error: "Entre na sua conta para continuar." }, { status: 401 });
   const rows = await queryRows<{ id: number; type: string; amount_cents: number; description: string; category: string; transaction_date: string }>(
-    "SELECT id, type, amount_cents, description, category, transaction_date FROM transactions WHERE user_id = ? ORDER BY transaction_date DESC, id DESC LIMIT 100",
+    "SELECT id, type, amount_cents, description, category, transaction_date FROM transactions WHERE user_id = ? ORDER BY transaction_date DESC, id DESC LIMIT 1000",
     [user.userId],
   );
   return Response.json({ transactions: rows.map((row) => ({ id: row.id, type: row.type, amount: row.amount_cents / 100, description: row.description, category: row.category, date: row.transaction_date })) });

@@ -47,6 +47,19 @@ export const transactions = sqliteTable(
   (table) => [index("transactions_user_date_idx").on(table.userId, table.transactionDate)],
 );
 
+export const investmentTransactions = sqliteTable(
+  "investment_transactions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull().references(() => profiles.userId, { onDelete: "cascade" }),
+    type: text("type", { enum: ["income", "expense"] }).notNull(),
+    amountCents: integer("amount_cents").notNull(),
+    transactionDate: text("transaction_date").notNull(),
+    createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => [index("investment_transactions_user_date_idx").on(table.userId, table.transactionDate)],
+);
+
 export const calendarEvents = sqliteTable(
   "calendar_events",
   {
