@@ -1,4 +1,4 @@
-import AionAuthLanding from "@/components/ui/aion-auth-landing";
+import AionAuthLanding from "@/components/ui/saa-s-template";
 import { chatGPTSignInPath, chatGPTSignOutPath, getChatGPTUser } from "./chatgpt-auth";
 
 export const dynamic = "force-dynamic";

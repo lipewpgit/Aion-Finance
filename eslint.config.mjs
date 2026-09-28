@@ -11,6 +11,7 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    "public/assets/**",
     "next-env.d.ts",
   ]),
   {
@@ -21,6 +22,12 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-unused-vars": "off",
       "react-hooks/purity": "off",
       "react-hooks/set-state-in-effect": "off",
+    },
+  },
+  {
+    files: ["app/layout.tsx"],
+    rules: {
+      "@next/next/no-page-custom-font": "off",
     },
   },
 ]);
