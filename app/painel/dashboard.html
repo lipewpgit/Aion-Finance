@@ -611,12 +611,12 @@
     .history-timeline .empty-state { min-height:100%; }
 
     .investments-section { grid-template-columns:minmax(280px,.78fr) minmax(0,1.22fr); gap:16px; }
-    .investment-vault { position:relative; min-height:570px; overflow:hidden; padding:36px; border:1px solid var(--line); border-radius:24px; background:radial-gradient(circle at 50% 55%,rgba(120,231,199,.12),transparent 28%),linear-gradient(150deg,#121317,#070809); box-shadow:var(--shadow); }
-    .investment-vault::before,.investment-vault::after { content:""; position:absolute; left:50%; top:56%; width:320px; height:320px; border:1px solid rgba(120,231,199,.13); border-radius:50%; transform:translate(-50%,-50%); }
+    .investment-vault { position:relative; display:flex; min-height:620px; overflow:hidden; padding:36px; flex-direction:column; border:1px solid var(--line); border-radius:24px; background:radial-gradient(circle at 50% 58%,rgba(120,231,199,.12),transparent 28%),linear-gradient(150deg,#121317,#070809); box-shadow:var(--shadow); }
+    .investment-vault::before,.investment-vault::after { content:""; position:absolute; left:50%; top:58%; width:320px; height:320px; border:1px solid rgba(120,231,199,.13); border-radius:50%; transform:translate(-50%,-50%); }
     .investment-vault::after { width:220px; height:220px; border-color:rgba(255,255,255,.08); box-shadow:0 0 0 44px rgba(255,255,255,.016); }
     .investment-vault h2 { position:relative; z-index:1; margin:11px 0 7px; font-size:clamp(31px,4vw,48px); font-weight:500; line-height:1; letter-spacing:-.055em; }
     .investment-vault > p:not(.eyebrow) { position:relative; z-index:1; max-width:350px; margin:0; color:var(--muted); line-height:1.6; }
-    .investment-balance-wrap { position:absolute; z-index:2; inset:0; display:grid; place-content:center; pointer-events:none; text-align:center; }
+    .investment-balance-wrap { position:relative; z-index:2; display:grid; min-height:245px; margin:28px -10px 100px; place-content:center; pointer-events:none; text-align:center; }
     .investment-balance-wrap span { color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; }
     .investment-balance { margin-top:9px; font-size:clamp(36px,4.8vw,58px); font-weight:600; letter-spacing:-.055em; }
     .investment-vault-stats { position:absolute; z-index:2; left:36px; right:36px; bottom:34px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
@@ -651,6 +651,37 @@
     .investment-item small { color:var(--muted); font-size:11px; }
     .investment-item-value { color:var(--mint); font-size:14px; font-weight:800; text-align:right; }
     .investment-item[data-type="expense"] .investment-item-value { color:var(--coral); }
+    .investment-goals { grid-column:1/-1; display:grid; grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr); overflow:hidden; }
+    .goal-creator { padding:32px; border-right:1px solid var(--line); background:radial-gradient(circle at 0% 100%,rgba(120,231,199,.09),transparent 42%),#0b0c0f; }
+    .goal-creator h2 { margin:10px 0 9px; font-size:27px; font-weight:600; letter-spacing:-.035em; }
+    .goal-creator > p:not(.eyebrow) { margin:0; color:var(--muted); font-size:14px; line-height:1.6; }
+    .goal-form { display:grid; gap:14px; margin-top:25px; padding:0; }
+    .goal-form-field { display:grid; gap:7px; }
+    .goal-form-field label { font-size:13px; font-weight:800; }
+    .goal-form-field input { width:100%; min-height:48px; padding:0 14px; border:1px solid var(--line); border-radius:12px; color:var(--ink); background:#15161a; font-size:14px; }
+    .goal-form .primary-button { width:100%; }
+    .goal-board { padding:29px 32px; }
+    .goal-board-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:7px; }
+    .goal-board-head h3 { margin:0; font-size:20px; font-weight:600; }
+    .goal-board-head p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+    .goal-board-count { color:var(--muted); font-size:12px; }
+    .goal-list { display:grid; margin-top:15px; }
+    .investment-goal-row { display:grid; grid-template-columns:minmax(150px,.8fr) minmax(180px,1fr); gap:17px 22px; align-items:center; padding:20px 0; border-bottom:1px solid var(--line); }
+    .investment-goal-row:last-child { border-bottom:0; }
+    .goal-title-line { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .goal-title-line strong { display:block; font-size:15px; line-height:1.35; }
+    .goal-title-line small { display:block; margin-top:5px; color:var(--muted); font-size:11px; }
+    .goal-delete { width:28px; height:28px; flex:0 0 auto; border:1px solid transparent; border-radius:9px; color:#70727b; background:transparent; font-size:18px; cursor:pointer; }
+    .goal-delete:hover { color:var(--coral); border-color:rgba(255,143,129,.22); background:rgba(255,143,129,.06); }
+    .goal-progress-copy { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:9px; }
+    .goal-progress-copy span { color:var(--muted); font-size:11px; }
+    .goal-progress-copy strong { font-size:13px; }
+    .goal-progress-track { height:7px; overflow:hidden; border-radius:999px; background:#25262c; }
+    .goal-progress-track i { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#4fae92,var(--mint)); transition:width .35s ease; }
+    .goal-contribution-form { grid-column:1/-1; justify-self:end; display:grid; grid-template-columns:minmax(0,1fr) auto; width:min(100%,350px); gap:8px; padding:0; }
+    .goal-contribution-form input { min-width:0; min-height:42px; padding:0 12px; border:1px solid var(--line); border-radius:11px; color:var(--ink); background:#15161a; }
+    .goal-contribution-form button { min-height:42px; padding:0 13px; border:1px solid rgba(120,231,199,.22); border-radius:11px; color:var(--mint); background:rgba(120,231,199,.07); font-weight:800; cursor:pointer; }
+    .goal-list .empty-state { min-height:210px; }
     body[data-view="overview"] .market-portal,body[data-view="overview"] #quotes,body[data-view="overview"] #calendar,body[data-view="overview"] #budget { display:none; }
     body[data-view="transactions"] .summary-grid,body[data-view="transactions"] .market-portal,body[data-view="transactions"] .metric-card,body[data-view="transactions"] .right-stack,body[data-view="transactions"] #quotes,body[data-view="transactions"] #calendar { display:none; }
     body[data-view="budget"] .summary-grid,body[data-view="budget"] .market-portal,body[data-view="budget"] .stack:first-child,body[data-view="budget"] .health-card,body[data-view="budget"] #quotes,body[data-view="budget"] #calendar { display:none; }
@@ -662,9 +693,11 @@
     body[data-view="investments"] #investments { display:grid; }
     body[data-view="transactions"] .workspace,body[data-view="budget"] .workspace { grid-template-columns:1fr; }
     @media (max-width:820px) {
-      .history-ledger,.investments-section { grid-template-columns:1fr; }
+      .history-ledger,.investments-section,.investment-goals { grid-template-columns:1fr; }
       .history-summary { border-right:0; border-bottom:1px solid var(--line); }
-      .investment-vault { min-height:510px; }
+      .investment-vault { min-height:600px; }
+      .goal-creator { border-right:0; border-bottom:1px solid var(--line); }
+      .investment-goal-row { grid-template-columns:minmax(150px,.8fr) minmax(180px,1fr); }
       .mobile-bar button { min-width:0; padding:6px 2px; font-size:9px; }
     }
     @media (max-width:620px) {
@@ -678,13 +711,17 @@
       .history-month-name small { font-size:8px; letter-spacing:.02em; white-space:nowrap; }
       .history-month-flow { gap:5px; }
       .history-month-balance { grid-column:2; text-align:left; }
-      .investment-vault { min-height:500px; padding:26px 22px; }
+      .investment-vault { min-height:590px; padding:26px 22px; }
       .investment-vault::before { width:280px; height:280px; }
       .investment-vault::after { width:190px; height:190px; }
+      .investment-balance-wrap { min-height:230px; margin:24px -8px 95px; }
       .investment-vault-stats { left:22px; right:22px; bottom:22px; }
       .investment-control-head,.investment-form { padding-left:22px; padding-right:22px; }
       .investment-list-head { padding-left:22px; padding-right:22px; }
       .investment-list { padding-left:22px; padding-right:22px; }
+      .goal-creator,.goal-board { padding:25px 22px; }
+      .investment-goal-row { grid-template-columns:1fr; gap:15px; }
+      .goal-contribution-form { grid-column:auto; justify-self:stretch; width:100%; }
     }
     @media (max-width:420px) {
       .topbar { gap:10px; }
@@ -721,7 +758,7 @@
         <div><p class="eyebrow" id="today-label">Hoje</p><h1>Boa noite, Alex.</h1></div>
         <div class="top-actions">
           <button class="icon-button" id="toggle-values" aria-label="Ocultar valores" title="Ocultar valores"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></button>
-          <button class="reset-button" id="reset-data" title="Apagar movimentações, investimentos e compromissos desta conta">Zerar dados</button>
+          <button class="reset-button" id="reset-data" title="Apagar movimentações, investimentos, metas e compromissos desta conta">Zerar dados</button>
           <button class="primary-button" id="open-dialog"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nova movimentação</span></button>
         </div>
       </header>
@@ -838,6 +875,22 @@
           <div class="investment-list-head"><strong>Movimentos recentes</strong><span id="investment-count">Nenhum registro</span></div>
           <div class="investment-list" id="investment-list"><div class="empty-state"><div><strong>Nada guardado ainda</strong>Registre uma entrada quando separar dinheiro para investir.</div></div></div>
         </article>
+        <article class="panel investment-goals" aria-labelledby="goals-title">
+          <div class="goal-creator">
+            <p class="eyebrow">Planos com destino</p>
+            <h2 id="goals-title">Crie uma meta</h2>
+            <p>Escreva o que você quer conquistar e acompanhe quanto falta.</p>
+            <form class="goal-form" id="goal-form">
+              <div class="goal-form-field"><label for="goal-title">Nome da meta</label><input id="goal-title" name="title" maxlength="70" placeholder="Ex.: Comprar um carro" required></div>
+              <div class="goal-form-field"><label for="goal-target">Valor desejado</label><input id="goal-target" name="target" inputmode="decimal" placeholder="R$ 0,00" required></div>
+              <button class="primary-button" type="submit">Criar meta</button>
+            </form>
+          </div>
+          <div class="goal-board">
+            <div class="goal-board-head"><div><h3>Suas metas</h3><p>Guarde um valor direto em cada objetivo.</p></div><span class="goal-board-count" id="goal-count">Nenhuma meta</span></div>
+            <div class="goal-list" id="goal-list"><div class="empty-state"><div><strong>Seu próximo plano começa aqui</strong>Crie uma meta para comprar um carro, uma casa ou realizar outro objetivo.</div></div></div>
+          </div>
+        </article>
       </section>
 
       <section class="quotes-section" id="quotes" aria-labelledby="quotes-title">
@@ -939,7 +992,7 @@
 
   <script src="assets/d3.v7.min.js"></script>
   <script>
-    const state = { hidden: false, filter: 'all', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month', transactions: [], investments: [] };
+    const state = { hidden: false, filter: 'all', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month', transactions: [], investments: [], goals: [] };
     const dialog = document.getElementById('transaction-dialog');
     const form = document.getElementById('transaction-form');
     const list = document.getElementById('transaction-list');
@@ -947,6 +1000,8 @@
     const historyList = document.getElementById('history-list');
     const investmentForm = document.getElementById('investment-form');
     const investmentList = document.getElementById('investment-list');
+    const goalForm = document.getElementById('goal-form');
+    const goalList = document.getElementById('goal-list');
     const dateInput = document.getElementById('date');
     dateInput.valueAsDate = new Date();
     const now = new Date();
@@ -967,6 +1022,9 @@
       const amount = Number(normalized);
       if (!Number.isFinite(amount) || amount <= 0) throw new Error('Informe um valor maior que zero.');
       return amount;
+    }
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
     }
     function showToast(message) {
       const toast = document.getElementById('toast');
@@ -1069,6 +1127,28 @@
       renderInvestments();
       return item;
     }
+    function renderGoals() {
+      document.getElementById('goal-count').textContent = state.goals.length ? `${state.goals.length} ${state.goals.length===1?'meta':'metas'}` : 'Nenhuma meta';
+      if (!state.goals.length) {
+        goalList.innerHTML = '<div class="empty-state"><div><strong>Seu próximo plano começa aqui</strong>Crie uma meta para comprar um carro, uma casa ou realizar outro objetivo.</div></div>';
+        return;
+      }
+      goalList.innerHTML = state.goals.map(goal => {
+        const target = Math.max(Number(goal.target)||0,0);
+        const saved = Math.max(Number(goal.saved)||0,0);
+        const progress = target ? Math.min(Math.round(saved/target*100),100) : 0;
+        const visualProgress = saved > 0 ? Math.max(progress,1) : 0;
+        const progressLabel = saved > 0 && progress === 0 ? '&lt;1%' : `${progress}%`;
+        const title = escapeHTML(goal.title);
+        return `<article class="investment-goal-row" data-goal-id="${goal.id}"><div class="goal-title-line"><div><strong>${title}</strong><small>${progressLabel} concluído</small></div><button class="goal-delete" type="button" data-delete-goal="${goal.id}" aria-label="Excluir meta ${title}" title="Excluir meta">×</button></div><div><div class="goal-progress-copy"><span class="money">${formatMoney(saved)} guardados</span><strong class="money">${formatMoney(target)}</strong></div><div class="goal-progress-track" aria-label="${progressLabel} da meta concluída"><i style="width:${visualProgress}%"></i></div></div><form class="goal-contribution-form" data-goal-id="${goal.id}"><input name="value" inputmode="decimal" autocomplete="off" placeholder="R$ 0,00" aria-label="Valor para ${title}" required><button type="submit">Guardar</button></form></article>`;
+      }).join('');
+      if (state.hidden) goalList.querySelectorAll('.money').forEach(element => element.classList.add('hidden-value'));
+    }
+    function addGoal(goal) {
+      state.goals.unshift(goal);
+      renderGoals();
+      return goal;
+    }
     function renderBudgetFromTransactions() {
       const budgetList = document.getElementById('budget-list');
       const categories = {};
@@ -1147,6 +1227,57 @@
     }
     hydrateInvestments();
 
+    goalForm.addEventListener('submit',async event => {
+      event.preventDefault();
+      try {
+        const input = Object.fromEntries(new FormData(goalForm));
+        const target = parseMoney(input.target);
+        const response = await fetch('/api/goals',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({title:input.title,target})});
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Não foi possível criar a meta.');
+        addGoal(payload.goal);
+        goalForm.reset();
+        showToast('Meta criada');
+      } catch (error) { showToast(error.message); }
+    });
+    goalList.addEventListener('submit',async event => {
+      const contributionForm = event.target.closest('.goal-contribution-form');
+      if (!contributionForm) return;
+      event.preventDefault();
+      try {
+        const amount = parseMoney(new FormData(contributionForm).get('value'));
+        const id = Number(contributionForm.dataset.goalId);
+        const response = await fetch('/api/goals',{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify({id,amount})});
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Não foi possível guardar este valor.');
+        state.goals = state.goals.map(goal => goal.id === payload.goal.id ? payload.goal : goal);
+        addInvestment(payload.investment);
+        renderGoals();
+        showToast('Valor guardado na meta');
+      } catch (error) { showToast(error.message); }
+    });
+    goalList.addEventListener('click',async event => {
+      const button = event.target.closest('[data-delete-goal]');
+      if (!button) return;
+      const goal = state.goals.find(item => item.id === Number(button.dataset.deleteGoal));
+      if (!goal || !confirm(`Excluir a meta “${goal.title}”? O dinheiro já guardado continua no total de investimentos.`)) return;
+      const response = await fetch(`/api/goals?id=${goal.id}`,{method:'DELETE'});
+      if (!response.ok) { showToast('Não foi possível excluir a meta.'); return; }
+      state.goals = state.goals.filter(item => item.id !== goal.id);
+      renderGoals();
+      showToast('Meta excluída');
+    });
+    async function hydrateGoals() {
+      try {
+        const response = await fetch('/api/goals');
+        if (!response.ok) return;
+        const payload = await response.json();
+        state.goals = Array.isArray(payload.goals) ? payload.goals : [];
+        renderGoals();
+      } catch (_) {}
+    }
+    hydrateGoals();
+
     document.getElementById('toggle-values').addEventListener('click', (event) => {
       state.hidden = !state.hidden;
       document.querySelectorAll('.money').forEach(el => el.classList.toggle('hidden-value', state.hidden));
@@ -1167,8 +1298,8 @@
     const scrollToQuotes = () => showView('quotes');
     document.getElementById('market-link').addEventListener('click', scrollToQuotes);
     document.getElementById('reset-data').addEventListener('click', async () => {
-      if (!confirm('Zerar todas as movimentações, investimentos e compromissos desta conta? Essa ação não pode ser desfeita.')) return;
-      const responses = await Promise.all([fetch('/api/transactions',{method:'DELETE'}),fetch('/api/investments',{method:'DELETE'}),fetch('/api/events',{method:'DELETE'})]);
+      if (!confirm('Zerar todas as movimentações, investimentos, metas e compromissos desta conta? Essa ação não pode ser desfeita.')) return;
+      const responses = await Promise.all([fetch('/api/transactions',{method:'DELETE'}),fetch('/api/investments',{method:'DELETE'}),fetch('/api/goals',{method:'DELETE'}),fetch('/api/events',{method:'DELETE'})]);
       if (responses.some(response => !response.ok)) { showToast('Não foi possível zerar os dados agora.'); return; }
       location.reload();
     });
@@ -1715,6 +1846,24 @@
         inputSchema:{ type:'object', properties:{}, additionalProperties:false },
         annotations:{ readOnlyHint:true, untrustedContentHint:false },
         execute() { const totals=investmentTotals(); return {balance:totals.income-totals.expense,income:totals.income,expenses:totals.expense,currency:'BRL'}; }
+      }, {
+        name:'add_investment_goal', title:'Criar meta de investimento',
+        description:'Cria uma meta com nome e valor desejado na área de investimentos.',
+        inputSchema:{type:'object',properties:{title:{type:'string',minLength:1},target:{type:'number',exclusiveMinimum:0}},required:['title','target'],additionalProperties:false},
+        annotations:{readOnlyHint:false,untrustedContentHint:false},
+        async execute(input) { const response=await fetch('/api/goals',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)}); const payload=await response.json(); if(!response.ok) throw new Error(payload.error||'Não foi possível criar a meta.'); const goal=addGoal(payload.goal); showToast('Meta criada'); return {status:'created',goal}; }
+      }, {
+        name:'contribute_to_investment_goal', title:'Guardar valor em uma meta',
+        description:'Adiciona um valor a uma meta existente e registra a mesma entrada no total investido.',
+        inputSchema:{type:'object',properties:{id:{type:'number'},value:{type:'number',exclusiveMinimum:0}},required:['id','value'],additionalProperties:false},
+        annotations:{readOnlyHint:false,untrustedContentHint:false},
+        async execute(input) { const response=await fetch('/api/goals',{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify({id:input.id,amount:input.value})}); const payload=await response.json(); if(!response.ok) throw new Error(payload.error||'Não foi possível guardar o valor.'); state.goals=state.goals.map(goal=>goal.id===payload.goal.id?payload.goal:goal); addInvestment(payload.investment); renderGoals(); showToast('Valor guardado na meta'); return {status:'saved',goal:payload.goal,investment:payload.investment}; }
+      }, {
+        name:'read_investment_goals', title:'Ler metas de investimento',
+        description:'Retorna as metas de investimento com valor desejado e valor já guardado.',
+        inputSchema:{type:'object',properties:{},additionalProperties:false},
+        annotations:{readOnlyHint:true,untrustedContentHint:false},
+        execute() { return {goals:state.goals,currency:'BRL'}; }
       }, {
         name:'add_calendar_event', title:'Adicionar compromisso',
         description:'Adiciona um compromisso à agenda do Aion e atualiza o calendário visível.',
