@@ -30,7 +30,7 @@ export async function GET() {
   const user = await currentUser();
   if (!user) return Response.json({ error: "Entre na sua conta para continuar." }, { status: 401 });
   const rows = await queryRows<InvestmentRow>(
-    "SELECT id, type, amount_cents, transaction_date FROM investment_transactions WHERE user_id = ? ORDER BY transaction_date DESC, id DESC LIMIT 1000",
+    "SELECT id, type, amount_cents, transaction_date FROM investment_transactions WHERE user_id = ? ORDER BY transaction_date DESC, id DESC",
     [user.userId],
   );
   return Response.json({ investments: rows.map(serializeInvestment) });

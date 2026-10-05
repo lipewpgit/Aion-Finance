@@ -587,27 +587,42 @@
     .history-ledger { display:grid; grid-template-columns:minmax(260px,.72fr) minmax(0,1.28fr); min-height:530px; overflow:hidden; }
     .history-summary { position:relative; overflow:hidden; padding:36px; border-right:1px solid var(--line); background:radial-gradient(circle at 20% 100%,rgba(120,231,199,.12),transparent 38%),#0b0c0f; }
     .history-summary::after { content:""; position:absolute; width:230px; height:230px; right:-120px; top:-90px; border:1px solid rgba(255,255,255,.06); border-radius:50%; box-shadow:0 0 0 38px rgba(255,255,255,.018),0 0 0 76px rgba(255,255,255,.012); }
-    .history-summary h2 { max-width:420px; margin:12px 0 12px; font-size:clamp(30px,4vw,48px); font-weight:500; line-height:1.03; letter-spacing:-.055em; }
+    .history-save-status { position:relative; z-index:1; display:inline-flex; align-items:center; gap:8px; min-height:29px; padding:0 11px; border:1px solid rgba(120,231,199,.18); border-radius:999px; color:var(--mint); background:rgba(120,231,199,.055); font-size:11px; font-weight:800; }
+    .history-save-status::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--mint); box-shadow:0 0 0 5px rgba(120,231,199,.08); }
+    .history-summary h2 { max-width:420px; margin:17px 0 12px; font-size:clamp(30px,4vw,48px); font-weight:500; line-height:1.03; letter-spacing:-.055em; }
     .history-summary > p:not(.eyebrow) { max-width:390px; margin:0; color:var(--muted); line-height:1.65; }
     .history-year-control { position:relative; z-index:1; display:grid; gap:8px; margin-top:34px; color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; }
     .history-year-control select { width:100%; min-height:47px; padding:0 14px; border:1px solid var(--line); border-radius:12px; color:var(--ink); background:#141519; font-size:14px; font-weight:700; }
     .history-year-total { position:relative; z-index:1; margin-top:18px; padding:19px; border:1px solid rgba(255,255,255,.07); border-radius:18px; background:rgba(255,255,255,.035); }
     .history-year-total span,.history-year-total small { display:block; color:var(--muted); font-size:11px; }
     .history-year-total strong { display:block; margin:8px 0 5px; font-size:clamp(28px,3vw,40px); letter-spacing:-.04em; }
+    .history-year-stats { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:9px; }
+    .history-year-stats div { min-width:0; padding:13px 14px; border:1px solid rgba(255,255,255,.06); border-radius:14px; background:rgba(255,255,255,.025); }
+    .history-year-stats span { display:block; color:var(--muted); font-size:10px; line-height:1.35; }
+    .history-year-stats b { display:block; overflow:hidden; margin-top:5px; color:var(--ink); font-size:13px; text-overflow:ellipsis; white-space:nowrap; }
     .history-timeline { position:relative; display:grid; align-content:start; padding:25px 30px 25px 42px; }
     .history-timeline::before { content:""; position:absolute; left:31px; top:37px; bottom:37px; width:1px; background:linear-gradient(var(--mint),rgba(120,231,199,.06)); }
-    .history-month { position:relative; display:grid; grid-template-columns:84px minmax(0,1fr) minmax(120px,.7fr); gap:22px; align-items:center; min-height:92px; padding:17px 0 17px 22px; border-bottom:1px solid var(--line); }
+    .history-month { position:relative; border-bottom:1px solid var(--line); }
     .history-month:last-child { border-bottom:0; }
-    .history-month::before { content:""; position:absolute; left:-15px; width:9px; height:9px; border:3px solid #0e0f12; border-radius:50%; background:var(--mint); box-shadow:0 0 0 1px rgba(120,231,199,.45); }
+    .history-month::before { content:""; position:absolute; z-index:2; left:-15px; top:40px; width:9px; height:9px; border:3px solid #0e0f12; border-radius:50%; background:var(--mint); box-shadow:0 0 0 1px rgba(120,231,199,.45); }
+    .history-month-main { display:grid; grid-template-columns:84px minmax(0,1fr) minmax(120px,.7fr) 32px; gap:20px; align-items:center; width:100%; min-height:92px; padding:17px 0 17px 22px; border:0; color:inherit; background:transparent; text-align:left; cursor:pointer; }
+    .history-month-main:hover .history-month-name strong { color:var(--mint); }
     .history-month-name strong { display:block; font-size:16px; text-transform:capitalize; }
     .history-month-name small { color:var(--muted); font:700 10px Consolas,monospace; letter-spacing:.08em; }
-    .history-month-flow { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    .history-month-flow { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
     .history-month-flow span { display:grid; gap:4px; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.07em; }
     .history-month-flow b { color:var(--ink); font-size:13px; font-variant-numeric:tabular-nums; }
     .history-month-balance { text-align:right; }
     .history-month-balance span { display:block; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
     .history-month-balance strong { display:block; margin-top:5px; color:var(--mint); font-size:17px; font-variant-numeric:tabular-nums; }
     .history-month-balance strong.negative { color:var(--coral); }
+    .history-month-chevron { display:grid; place-items:center; width:30px; height:30px; border:1px solid var(--line); border-radius:10px; color:var(--muted); font-size:18px; transition:transform .2s ease,color .2s ease; }
+    .history-month.open .history-month-chevron { color:var(--mint); transform:rotate(180deg); }
+    .history-month-detail { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:0 0 18px 22px; padding:14px; border:1px solid rgba(255,255,255,.06); border-radius:15px; background:#0a0b0d; }
+    .history-month-detail[hidden] { display:none; }
+    .history-month-detail div { min-width:0; padding:3px 4px; }
+    .history-month-detail span { display:block; color:var(--muted); font-size:10px; line-height:1.35; }
+    .history-month-detail b { display:block; overflow:hidden; margin-top:6px; color:var(--ink); font-size:13px; font-variant-numeric:tabular-nums; text-overflow:ellipsis; white-space:nowrap; }
     .history-timeline .empty-state { min-height:100%; }
 
     .investments-section { grid-template-columns:minmax(280px,.78fr) minmax(0,1.22fr); gap:16px; }
@@ -706,11 +721,14 @@
       .history-summary { padding:26px 22px; }
       .history-timeline { padding:17px 20px 17px 34px; }
       .history-timeline::before { left:24px; }
-      .history-month { grid-template-columns:76px minmax(0,1fr); gap:12px; padding-left:18px; }
+      .history-month-main { grid-template-columns:76px minmax(0,1fr) 30px; gap:12px; padding-left:18px; }
       .history-month::before { left:-14px; }
       .history-month-name small { font-size:8px; letter-spacing:.02em; white-space:nowrap; }
-      .history-month-flow { gap:5px; }
+      .history-month-flow { grid-column:2; grid-row:2; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+      .history-month-flow span:last-child { grid-column:1/-1; }
       .history-month-balance { grid-column:2; text-align:left; }
+      .history-month-chevron { grid-column:3; grid-row:1/3; }
+      .history-month-detail { grid-template-columns:1fr 1fr; margin-left:18px; }
       .investment-vault { min-height:590px; padding:26px 22px; }
       .investment-vault::before { width:280px; height:280px; }
       .investment-vault::after { width:190px; height:190px; }
@@ -844,12 +862,14 @@
         <article class="panel history-ledger">
           <div class="history-summary">
             <p class="eyebrow">Arquivo financeiro</p>
+            <span class="history-save-status">Salvo automaticamente na sua conta</span>
             <h2 id="history-title">Seu dinheiro através do tempo.</h2>
-            <p>Volte aos meses anteriores para ver quanto entrou, quanto saiu e o que sobrou em cada período.</p>
+            <p>Volte aos meses anteriores para ver quanto entrou, quanto saiu, quanto foi investido e o que sobrou em cada período.</p>
             <label class="history-year-control" for="history-year">Ano<select id="history-year" aria-label="Ano do histórico mensal"></select></label>
             <div class="history-year-total"><span>Saldo dos meses exibidos</span><strong class="money" id="history-year-balance">R$ 0,00</strong><small id="history-year-note">Nenhuma movimentação neste ano</small></div>
+            <div class="history-year-stats"><div><span>Investido no ano</span><b class="money" id="history-year-invested">R$ 0,00</b></div><div><span>Saldo ao fim do período</span><b class="money" id="history-closing-balance">R$ 0,00</b></div></div>
           </div>
-          <div class="history-timeline" id="history-list"><div class="empty-state"><div><strong>Seu histórico começa vazio</strong>Os meses aparecem aqui conforme você registra movimentações.</div></div></div>
+          <div class="history-timeline" id="history-list"><div class="empty-state"><div><strong>Seu histórico começa vazio</strong>Os meses aparecem aqui e permanecem salvos conforme você registra movimentações.</div></div></div>
         </article>
       </section>
 
@@ -992,7 +1012,7 @@
 
   <script src="assets/d3.v7.min.js"></script>
   <script>
-    const state = { hidden: false, filter: 'all', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month', transactions: [], investments: [], goals: [] };
+    const state = { hidden: false, filter: 'all', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month', activeHistoryMonth: null, transactions: [], investments: [], goals: [] };
     const dialog = document.getElementById('transaction-dialog');
     const form = document.getElementById('transaction-form');
     const list = document.getElementById('transaction-list');
@@ -1063,40 +1083,78 @@
     }
     function renderMonthlyHistory() {
       const months = new Map();
+      const monthSummary = key => {
+        const current = months.get(key);
+        if (current) return current;
+        const created = { key, income:0, expense:0, investmentIncome:0, investmentExpense:0, count:0, investmentCount:0 };
+        months.set(key,created);
+        return created;
+      };
       state.transactions.forEach(item => {
         const date = String(item.date || '');
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
         const key = date.slice(0,7);
-        const summary = months.get(key) || { key, income:0, expense:0, count:0 };
+        const summary = monthSummary(key);
         summary[item.type === 'income' ? 'income' : 'expense'] += Number(item.amount) || 0;
         summary.count += 1;
-        months.set(key,summary);
+      });
+      state.investments.forEach(item => {
+        const date = String(item.date || '');
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+        const summary = monthSummary(date.slice(0,7));
+        summary[item.type === 'income' ? 'investmentIncome' : 'investmentExpense'] += Number(item.amount) || 0;
+        summary.investmentCount += 1;
+      });
+      let cashBalance = 0;
+      let investmentBalance = 0;
+      const allMonths = [...months.values()].sort((a,b) => a.key.localeCompare(b.key)).map(month => {
+        month.openingBalance = cashBalance;
+        cashBalance += month.income-month.expense;
+        month.closingBalance = cashBalance;
+        month.openingInvestmentBalance = investmentBalance;
+        investmentBalance += month.investmentIncome-month.investmentExpense;
+        month.investmentBalance = investmentBalance;
+        return month;
       });
       const currentYear = String(new Date().getFullYear());
-      const years = [...new Set([currentYear,...[...months.keys()].map(key => key.slice(0,4))])].sort((a,b) => Number(b)-Number(a));
+      const years = [...new Set([currentYear,...allMonths.map(month => month.key.slice(0,4))])].sort((a,b) => Number(b)-Number(a));
       const previousYear = historyYear.value;
       historyYear.innerHTML = years.map(year => `<option value="${year}">${year}</option>`).join('');
       historyYear.value = years.includes(previousYear) ? previousYear : years[0];
       const selectedYear = historyYear.value;
-      const selectedMonths = [...months.values()].filter(month => month.key.startsWith(selectedYear)).sort((a,b) => b.key.localeCompare(a.key));
+      const selectedMonths = allMonths.filter(month => month.key.startsWith(selectedYear)).sort((a,b) => b.key.localeCompare(a.key));
       const yearBalance = selectedMonths.reduce((total,month) => total + month.income - month.expense,0);
+      const yearInvested = selectedMonths.reduce((total,month) => total + month.investmentIncome - month.investmentExpense,0);
       const yearBalanceElement = document.getElementById('history-year-balance');
       yearBalanceElement.textContent = formatMoney(yearBalance);
       yearBalanceElement.style.color = yearBalance < 0 ? 'var(--coral)' : 'var(--ink)';
-      document.getElementById('history-year-note').textContent = selectedMonths.length ? `${selectedMonths.length} ${selectedMonths.length === 1 ? 'mês com movimentações' : 'meses com movimentações'}` : 'Nenhuma movimentação neste ano';
+      document.getElementById('history-year-note').textContent = selectedMonths.length ? `${selectedMonths.length} ${selectedMonths.length === 1 ? 'mês registrado' : 'meses registrados'} · tudo salvo` : 'Nenhuma movimentação neste ano';
+      document.getElementById('history-year-invested').textContent = formatMoney(yearInvested);
+      document.getElementById('history-closing-balance').textContent = formatMoney(selectedMonths[0]?.closingBalance || 0);
       if (!selectedMonths.length) {
-        historyList.innerHTML = '<div class="empty-state"><div><strong>Nenhum mês registrado neste ano</strong>Escolha outro ano ou adicione uma movimentação.</div></div>';
+        state.activeHistoryMonth = null;
+        historyList.innerHTML = '<div class="empty-state"><div><strong>Nenhum mês registrado neste ano</strong>Escolha outro ano ou adicione uma movimentação. Quando houver dados, este período ficará salvo aqui.</div></div>';
         return;
       }
+      if (state.activeHistoryMonth && !selectedMonths.some(month => month.key === state.activeHistoryMonth)) state.activeHistoryMonth = null;
       historyList.innerHTML = selectedMonths.map(month => {
         const [year,monthNumber] = month.key.split('-').map(Number);
         const monthName = new Date(year,monthNumber-1,1).toLocaleDateString('pt-BR',{month:'long'});
         const balance = month.income-month.expense;
-        return `<article class="history-month"><div class="history-month-name"><strong>${monthName}</strong><small>${month.count} ${month.count===1?'REGISTRO':'REGISTROS'}</small></div><div class="history-month-flow"><span>Entrou<b class="money">${formatMoney(month.income)}</b></span><span>Saiu<b class="money">${formatMoney(month.expense)}</b></span></div><div class="history-month-balance"><span>Sobrou</span><strong class="money${balance<0?' negative':''}">${formatMoney(balance)}</strong></div></article>`;
+        const investmentNet = month.investmentIncome-month.investmentExpense;
+        const activityCount = month.count+month.investmentCount;
+        const isOpen = state.activeHistoryMonth === month.key;
+        return `<article class="history-month${isOpen?' open':''}"><button type="button" class="history-month-main" data-history-month="${month.key}" aria-expanded="${isOpen}" aria-controls="history-detail-${month.key}"><div class="history-month-name"><strong>${monthName}</strong><small>${activityCount} ${activityCount===1?'MOVIMENTO':'MOVIMENTOS'}</small></div><div class="history-month-flow"><span>Entrou<b class="money">${formatMoney(month.income)}</b></span><span>Saiu<b class="money">${formatMoney(month.expense)}</b></span><span>Investiu<b class="money">${formatMoney(investmentNet)}</b></span></div><div class="history-month-balance"><span>Sobrou no mês</span><strong class="money${balance<0?' negative':''}">${formatMoney(balance)}</strong></div><span class="history-month-chevron" aria-hidden="true">⌄</span></button><div class="history-month-detail" id="history-detail-${month.key}"${isOpen?'':' hidden'}><div><span>Saldo inicial</span><b class="money">${formatMoney(month.openingBalance)}</b></div><div><span>Saldo ao fechar</span><b class="money">${formatMoney(month.closingBalance)}</b></div><div><span>Investimentos acumulados</span><b class="money">${formatMoney(month.investmentBalance)}</b></div><div><span>Patrimônio acompanhado</span><b class="money">${formatMoney(month.closingBalance+month.investmentBalance)}</b></div></div></article>`;
       }).join('');
       if (state.hidden) historyList.querySelectorAll('.money').forEach(element => element.classList.add('hidden-value'));
     }
-    historyYear.addEventListener('change',renderMonthlyHistory);
+    historyYear.addEventListener('change',() => { state.activeHistoryMonth = null; renderMonthlyHistory(); });
+    historyList.addEventListener('click',event => {
+      const button = event.target.closest('[data-history-month]');
+      if (!button) return;
+      state.activeHistoryMonth = state.activeHistoryMonth === button.dataset.historyMonth ? null : button.dataset.historyMonth;
+      renderMonthlyHistory();
+    });
 
     function investmentTotals() {
       return state.investments.reduce((totals,item) => {
@@ -1121,6 +1179,7 @@
         }).join('');
       }
       if (state.hidden) document.querySelectorAll('#investments .money').forEach(element => element.classList.add('hidden-value'));
+      renderMonthlyHistory();
     }
     function addInvestment(item) {
       state.investments.unshift(item);
@@ -1195,9 +1254,10 @@
         list.innerHTML = '';
         state.transactions = [];
         const transactions = payload.transactions || [];
-        [...transactions].reverse().forEach(item => addTransaction(item,false));
+        [...transactions.slice(0,100)].reverse().forEach(item => addTransaction(item,false));
+        state.transactions = transactions.map(item => ({ ...item, amount:Number(item.amount)||0 }));
         if (!transactions.length) list.innerHTML = '<div class="empty-state"><div><strong>Nenhuma movimentação ainda</strong>Registre uma entrada ou um gasto para começar.</div></div>';
-        document.getElementById('transaction-count').textContent = transactions.length ? `${transactions.length} lançamentos recentes` : 'Seu histórico começa aqui';
+        document.getElementById('transaction-count').textContent = transactions.length ? `${transactions.length} ${transactions.length===1?'lançamento salvo':'lançamentos salvos'}` : 'Seu histórico começa aqui';
         renderFinancialSummary();
       } catch (_) {}
     }
