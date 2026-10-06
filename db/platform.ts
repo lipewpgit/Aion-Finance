@@ -12,7 +12,24 @@ type D1Database = { prepare: (statement: string) => D1Statement };
 let postgresReady: Promise<void> | null = null;
 
 function postgresUrl() {
-  return process.env.DATABASE_URL?.trim() || null;
+  return (
+    process.env.DATABASE_URL?.trim()
+    || process.env.POSTGRES_URL?.trim()
+    || process.env.POSTGRES_URL_NON_POOLING?.trim()
+    || null
+  );
+}
+
+export function isDatabaseUnavailable(error: unknown) {
+  const message = error instanceof Error ? error.message.toLowerCase() : "";
+  return (
+    message.includes("nenhum banco foi configurado")
+    || message.includes("database_url")
+    || message.includes("cloudflare:workers")
+    || message.includes("failed to connect")
+    || message.includes("connection refused")
+    || message.includes("connection terminated")
+  );
 }
 
 async function d1Database(): Promise<D1Database> {
@@ -39,9 +56,11 @@ async function ensurePostgres() {
         user_id TEXT PRIMARY KEY,
         email TEXT NOT NULL,
         display_name TEXT NOT NULL,
+        avatar_data_url TEXT,
         created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::text),
         updated_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::text)
       )`,
+      `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS avatar_data_url TEXT`,
       `CREATE TABLE IF NOT EXISTS auth_users (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -101,7 +120,10 @@ async function ensurePostgres() {
       `CREATE INDEX IF NOT EXISTS calendar_events_user_date_idx ON calendar_events(user_id, event_date)`,
     ];
     for (const statement of statements) await sql.query(statement, []);
-  })();
+  })().catch((error) => {
+    postgresReady = null;
+    throw error;
+  });
   return postgresReady;
 }
 

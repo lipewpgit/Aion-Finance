@@ -1,4 +1,5 @@
 import { getCurrentUser, upsertProfile } from "../auth";
+import { isDatabaseUnavailable } from "../../db/platform";
 import dashboard from "./dashboard.generated";
 
 export const dynamic = "force-dynamic";
@@ -8,18 +9,36 @@ function escapeHtml(value: string) {
 }
 
 export async function GET(request: Request) {
-  const user = await getCurrentUser();
+  let user;
+  try {
+    user = await getCurrentUser();
+  } catch (error) {
+    console.error("Aion dashboard authentication failed", error);
+    const message = isDatabaseUnavailable(error)
+      ? "O banco de dados da publicação ainda não está conectado. Tente novamente após a configuração na Vercel."
+      : "Não foi possível abrir seu painel agora. Tente novamente em alguns instantes.";
+    return Response.redirect(new URL(`/entrar?error=${encodeURIComponent(message)}`, request.url), 302);
+  }
   if (!user) return Response.redirect(new URL("/entrar", request.url), 302);
-  await upsertProfile(user);
+  try {
+    await upsertProfile(user);
+  } catch (error) {
+    console.error("Aion profile sync failed", error);
+    const message = "Não foi possível carregar seus dados agora. Tente novamente em alguns instantes.";
+    return Response.redirect(new URL(`/entrar?error=${encodeURIComponent(message)}`, request.url), 302);
+  }
 
   const firstName = user.displayName.split(/\s+/)[0] || "você";
   const initials = user.displayName.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
   const html = dashboard
     .replaceAll("Alex Martins", escapeHtml(user.displayName))
     .replaceAll("Boa noite, Alex.", `Olá, ${escapeHtml(firstName)}.`)
-    .replace('<div class="avatar">AM</div>', `<div class="avatar">${escapeHtml(initials)}</div>`)
-    .replace("Plano Essencial", escapeHtml(user.email))
-    .replace("</div></div></div></aside>", `</div><a class="account-signout" href="/api/auth/logout" target="_top">Sair da conta</a></div></div></aside>`);
+    .replaceAll("data-profile-avatar>AM<", `data-profile-avatar>${escapeHtml(initials)}<`)
+    .replaceAll(
+      'data-profile-image src="" hidden',
+      user.avatarDataUrl ? `data-profile-image src="${escapeHtml(user.avatarDataUrl)}"` : 'data-profile-image src="" hidden',
+    )
+    .replaceAll("Plano Essencial", escapeHtml(user.email));
 
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "private, no-store" } });
 }
