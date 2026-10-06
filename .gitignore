@@ -35,6 +35,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local tool caches
+/.npm-cache/
+
 # typescript
 next-env.d.ts
 /dist/
