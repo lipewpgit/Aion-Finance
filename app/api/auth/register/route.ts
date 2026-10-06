@@ -1,5 +1,5 @@
 import { createSession, hashPassword, isSameOrigin, sessionCookie, upsertProfile } from "@/app/auth";
-import { queryRows, runStatement } from "@/db/platform";
+import { isDatabaseUnavailable, queryRows, runStatement } from "@/db/platform";
 
 export const dynamic = "force-dynamic";
 
@@ -23,25 +23,32 @@ export async function POST(request: Request) {
   if (password.length < 8 || password.length > 128) return fail("A senha deve ter entre 8 e 128 caracteres.", 400);
   if (password !== String(body.confirmPassword ?? password)) return fail("As senhas não coincidem.", 400);
 
-  const existing = await queryRows<{ id: string }>("SELECT id FROM auth_users WHERE email = ? LIMIT 1", [email]);
-  if (existing.length) return fail("Já existe uma conta com este e-mail.", 409);
-
-  const userId = crypto.randomUUID();
-  const passwordHash = await hashPassword(password);
   try {
+    const existing = await queryRows<{ id: string }>("SELECT id FROM auth_users WHERE email = ? LIMIT 1", [email]);
+    if (existing.length) return fail("Já existe uma conta com este e-mail.", 409);
+
+    const userId = crypto.randomUUID();
+    const passwordHash = await hashPassword(password);
     await runStatement("INSERT INTO auth_users (id, name, email, password_hash) VALUES (?, ?, ?, ?)", [userId, name, email, passwordHash]);
-    await upsertProfile({ userId, displayName: name, email });
+    try {
+      await upsertProfile({ userId, displayName: name, email });
+      const session = await createSession(userId, remember);
+      const response = isJson
+        ? Response.json({ ok: true, redirectTo: "/painel" }, { status: 201 })
+        : new Response(null, { status: 303, headers: { location: new URL("/painel", request.url).toString() } });
+      response.headers.set("set-cookie", sessionCookie(session.token, session.maxAge));
+      return response;
+    } catch (error) {
+      await runStatement("DELETE FROM auth_users WHERE id = ?", [userId]).catch(() => undefined);
+      throw error;
+    }
   } catch (error) {
-    await runStatement("DELETE FROM auth_users WHERE id = ?", [userId]).catch(() => undefined);
     const message = error instanceof Error ? error.message.toLowerCase() : "";
     if (message.includes("unique") || message.includes("constraint")) return fail("Já existe uma conta com este e-mail.", 409);
-    throw error;
+    console.error("Aion registration failed", error);
+    if (isDatabaseUnavailable(error)) {
+      return fail("O banco de dados da publicação ainda não está conectado. Tente novamente após a configuração na Vercel.", 503);
+    }
+    return fail("Não foi possível criar a conta agora. Tente novamente em alguns instantes.", 500);
   }
-
-  const session = await createSession(userId, remember);
-  const response = isJson
-    ? Response.json({ ok: true, redirectTo: "/painel" }, { status: 201 })
-    : new Response(null, { status: 303, headers: { location: new URL("/painel", request.url).toString() } });
-  response.headers.set("set-cookie", sessionCookie(session.token, session.maxAge));
-  return response;
 }

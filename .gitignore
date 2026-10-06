@@ -34,6 +34,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+.vercel-cli/
 
 # local tool caches
 /.npm-cache/
