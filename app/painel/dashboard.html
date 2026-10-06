@@ -1075,10 +1075,23 @@
       return Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
     function parseMoney(value) {
-      const normalized = String(value).replace(/[^0-9,.-]/g, '').replace(/\./g, '').replace(',', '.');
+      if (typeof value === 'number') {
+        if (!Number.isFinite(value) || value <= 0) throw new Error('Informe um valor maior que zero.');
+        return Math.round(value * 100) / 100;
+      }
+      const raw = String(value ?? '').trim();
+      if (!raw || raw.includes('-')) throw new Error('Informe um valor maior que zero.');
+      const cleaned = raw.replace(/\s/g, '').replace(/[^0-9,.]/g, '');
+      const lastComma = cleaned.lastIndexOf(',');
+      const lastDot = cleaned.lastIndexOf('.');
+      let decimalIndex = Math.max(lastComma, lastDot);
+      if (lastComma === -1 && lastDot !== -1 && cleaned.length-lastDot-1 === 3) decimalIndex = -1;
+      const integerDigits = (decimalIndex === -1 ? cleaned : cleaned.slice(0,decimalIndex)).replace(/\D/g,'') || '0';
+      const decimalDigits = decimalIndex === -1 ? '' : cleaned.slice(decimalIndex+1).replace(/\D/g,'');
+      const normalized = decimalDigits ? `${integerDigits}.${decimalDigits}` : integerDigits;
       const amount = Number(normalized);
       if (!Number.isFinite(amount) || amount <= 0) throw new Error('Informe um valor maior que zero.');
-      return amount;
+      return Math.round(amount * 100) / 100;
     }
     function escapeHTML(value) {
       return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
