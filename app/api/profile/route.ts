@@ -19,11 +19,25 @@ export async function PATCH(request: Request) {
     const displayName = String(body.name ?? "").trim().replace(/\s+/g, " ").slice(0, 80);
     if (displayName.length < 2) return Response.json({ error: "Digite um nome com pelo menos 2 caracteres." }, { status: 400 });
 
+    let avatarDataUrl: string | null | undefined;
+    if (Object.hasOwn(body, "avatarDataUrl")) {
+      avatarDataUrl = body.avatarDataUrl === null || body.avatarDataUrl === "" ? null : String(body.avatarDataUrl);
+      if (avatarDataUrl && !/^data:image\/(?:jpeg|png|webp);base64,[a-z0-9+/=]+$/i.test(avatarDataUrl)) {
+        return Response.json({ error: "Escolha uma imagem JPG, PNG ou WebP válida." }, { status: 400 });
+      }
+      if (avatarDataUrl && avatarDataUrl.length > 300_000) {
+        return Response.json({ error: "A foto ficou muito grande. Escolha outra imagem." }, { status: 413 });
+      }
+    }
+
     const updatedAt = new Date().toISOString();
     await runStatement("UPDATE auth_users SET name = ?, updated_at = ? WHERE id = ?", [displayName, updatedAt, user.userId]);
     const profile = { ...user, displayName };
     await upsertProfile(profile);
-    return Response.json({ profile });
+    if (avatarDataUrl !== undefined) {
+      await runStatement("UPDATE profiles SET avatar_data_url = ?, updated_at = ? WHERE user_id = ?", [avatarDataUrl, updatedAt, user.userId]);
+    }
+    return Response.json({ profile: { ...profile, avatarDataUrl: avatarDataUrl === undefined ? user.avatarDataUrl : avatarDataUrl } });
   } catch (error) {
     console.error("Aion profile update failed", error);
     const message = isDatabaseUnavailable(error)

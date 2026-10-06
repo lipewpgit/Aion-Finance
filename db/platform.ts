@@ -56,9 +56,11 @@ async function ensurePostgres() {
         user_id TEXT PRIMARY KEY,
         email TEXT NOT NULL,
         display_name TEXT NOT NULL,
+        avatar_data_url TEXT,
         created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::text),
         updated_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::text)
       )`,
+      `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS avatar_data_url TEXT`,
       `CREATE TABLE IF NOT EXISTS auth_users (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,

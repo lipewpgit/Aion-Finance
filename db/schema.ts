@@ -5,6 +5,7 @@ export const profiles = sqliteTable("profiles", {
   userId: text("user_id").primaryKey(),
   email: text("email").notNull(),
   displayName: text("display_name").notNull(),
+  avatarDataUrl: text("avatar_data_url"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });

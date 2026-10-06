@@ -76,7 +76,9 @@
     .profile-trigger { width:100%; display:flex; align-items:center; gap:10px; padding:12px; border:1px solid rgba(255,255,255,.09); border-radius:16px; color:#edf1ff; background:rgba(255,255,255,.04); text-align:left; cursor:pointer; transition:border-color .2s ease,background .2s ease,transform .2s ease; }
     .profile-trigger:hover { transform:translateY(-1px); border-color:rgba(120,231,199,.3); background:rgba(255,255,255,.075); }
     .profile-trigger:focus-visible { outline:2px solid var(--mint); outline-offset:3px; }
-    .avatar { display:grid; place-items:center; width:36px; height:36px; flex:0 0 auto; border:1px solid rgba(255,255,255,.28); border-radius:50%; color:#050506; background:linear-gradient(145deg,#f7fffc 0%,var(--mint) 72%); box-shadow:0 0 0 4px rgba(120,231,199,.07); font-size:12px; font-weight:800; letter-spacing:.02em; }
+    .avatar { display:grid; place-items:center; width:36px; height:36px; flex:0 0 auto; overflow:hidden; border:1px solid rgba(255,255,255,.28); border-radius:50%; color:#050506; background:linear-gradient(145deg,#f7fffc 0%,var(--mint) 72%); box-shadow:0 0 0 4px rgba(120,231,199,.07); font-size:12px; font-weight:800; letter-spacing:.02em; }
+    [data-profile-image] { width:100%; height:100%; object-fit:cover; }
+    [data-profile-image]:not([hidden]) + [data-profile-avatar] { display:none; }
     .profile-meta { min-width:0; flex:1; }
     .profile-meta span { display:block; overflow:hidden; color:#fff; font-size:13px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }
     .profile-meta small { display:block; overflow:hidden; margin-top:3px; color:#95a0c1; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
@@ -87,7 +89,8 @@
     .eyebrow { margin: 0 0 3px; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     h1 { margin: 0; font: 700 clamp(27px, 3vw, 36px)/1.12 Georgia, serif; letter-spacing: -.035em; }
     .top-actions { display: flex; align-items: center; gap: 10px; }
-    .mobile-profile-trigger { display:none; width:44px; height:44px; padding:0; border:0; border-radius:50%; color:#050506; background:linear-gradient(145deg,#fff,var(--mint)); box-shadow:0 8px 24px rgba(120,231,199,.14); font-size:11px; font-weight:800; }
+    .mobile-profile-trigger { display:none; width:44px; height:44px; padding:0; overflow:hidden; border:0; border-radius:50%; color:#050506; background:linear-gradient(145deg,#fff,var(--mint)); box-shadow:0 8px 24px rgba(120,231,199,.14); font-size:11px; font-weight:800; }
+    .mobile-profile-trigger > span { display:grid; width:100%; height:100%; place-items:center; }
     .icon-button, .ghost-button, .primary-button {
       min-height: 44px; border-radius: 13px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font-weight: 700;
     }
@@ -395,11 +398,16 @@
     .profile-orbit::before,.profile-orbit::after { content:""; position:absolute; inset:0; border:1px solid rgba(120,231,199,.28); border-radius:50%; }
     .profile-orbit::before { border-right-color:transparent; transform:rotate(-24deg); }
     .profile-orbit::after { inset:7px; border-color:rgba(255,255,255,.08); }
-    .profile-avatar-large { position:relative; z-index:1; display:grid; place-items:center; width:56px; height:56px; border-radius:50%; color:#050506; background:linear-gradient(145deg,#fff,#78e7c7); box-shadow:0 10px 32px rgba(120,231,199,.2); font-size:17px; font-weight:800; }
+    .profile-avatar-large { position:relative; z-index:1; display:grid; place-items:center; width:56px; height:56px; overflow:hidden; border-radius:50%; color:#050506; background:linear-gradient(145deg,#fff,#78e7c7); box-shadow:0 10px 32px rgba(120,231,199,.2); font-size:17px; font-weight:800; }
     .profile-hero-copy { position:relative; z-index:1; min-width:0; }
     .profile-kicker { display:block; margin-bottom:7px; color:var(--mint); font:700 10px/1 Consolas,monospace; letter-spacing:.12em; text-transform:uppercase; }
     .profile-hero-copy strong { display:block; overflow:hidden; font-size:20px; font-weight:600; letter-spacing:-.025em; text-overflow:ellipsis; white-space:nowrap; }
     .profile-hero-copy small { display:block; overflow:hidden; margin-top:6px; color:#8f929d; font-size:12px; text-overflow:ellipsis; white-space:nowrap; }
+    .profile-photo-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+    .profile-photo-button { display:inline-flex; min-height:36px; align-items:center; justify-content:center; padding:0 12px; border:1px solid rgba(120,231,199,.25); border-radius:10px; color:#b9f5e3; background:rgba(120,231,199,.08); cursor:pointer; font-size:12px; font-weight:700; }
+    .profile-photo-remove { min-height:36px; padding:0 11px; border:0; color:#999da8; background:transparent; font-size:12px; font-weight:700; }
+    .profile-photo-button:hover { background:rgba(120,231,199,.14); }
+    .profile-photo-remove:hover { color:#fff; }
     .profile-form { padding-top:20px; }
     .profile-form .field input { color:#f4f4f2; border-color:rgba(255,255,255,.1); background:#15161a; }
     .profile-form .field input:focus { border-color:rgba(120,231,199,.6); outline:3px solid rgba(120,231,199,.1); }
@@ -833,14 +841,14 @@
         <button data-target="calendar"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4m8-4v4M3 10h18"/></svg>Agenda</button>
         <button data-target="investments"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 9h16v10H4zM7 9V6h10v3M8 14h8"/><circle cx="12" cy="14" r="2"/></svg>Investimentos</button>
       </nav>
-      <div class="sidebar-footer"><button class="profile-trigger" type="button" data-open-profile aria-label="Abrir seu perfil"><span class="avatar" data-profile-avatar>AM</span><span class="profile-meta"><span data-profile-name>Alex Martins</span><small data-profile-email>Plano Essencial</small></span><svg class="profile-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div>
+      <div class="sidebar-footer"><button class="profile-trigger" type="button" data-open-profile aria-label="Abrir seu perfil"><span class="avatar"><img data-profile-image src="" hidden alt=""><span data-profile-avatar>AM</span></span><span class="profile-meta"><span data-profile-name>Alex Martins</span><small data-profile-email>Plano Essencial</small></span><svg class="profile-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div>
     </aside>
 
     <main id="overview">
       <header class="topbar">
         <div><p class="eyebrow" id="today-label">Hoje</p><h1 id="greeting-title">Boa noite, Alex.</h1></div>
         <div class="top-actions">
-          <button class="mobile-profile-trigger" type="button" data-open-profile aria-label="Abrir seu perfil"><span data-profile-avatar>AM</span></button>
+          <button class="mobile-profile-trigger" type="button" data-open-profile aria-label="Abrir seu perfil"><span><img data-profile-image src="" hidden alt=""><span data-profile-avatar>AM</span></span></button>
           <button class="icon-button" id="toggle-values" aria-label="Ocultar valores" title="Ocultar valores"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></button>
           <button class="reset-button" id="reset-data" title="Apagar movimentações, investimentos, metas e compromissos desta conta">Zerar dados</button>
           <button class="primary-button" id="open-dialog"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nova movimentação</span></button>
@@ -1091,8 +1099,8 @@
   <dialog id="profile-dialog" class="profile-dialog" aria-labelledby="profile-dialog-title">
     <div class="dialog-head"><h2 id="profile-dialog-title">Seu perfil</h2><button class="close-button" id="close-profile" aria-label="Fechar">×</button></div>
     <div class="profile-hero">
-      <div class="profile-orbit"><div class="profile-avatar-large" data-profile-avatar>AM</div></div>
-      <div class="profile-hero-copy"><span class="profile-kicker">Conta Aion</span><strong data-profile-name>Alex Martins</strong><small data-profile-email>Plano Essencial</small></div>
+      <div class="profile-orbit"><div class="profile-avatar-large"><img data-profile-image src="" hidden alt=""><span data-profile-avatar>AM</span></div></div>
+      <div class="profile-hero-copy"><span class="profile-kicker">Conta Aion</span><strong data-profile-name>Alex Martins</strong><small data-profile-email>Plano Essencial</small><div class="profile-photo-actions"><label class="profile-photo-button" for="profile-photo-input">Escolher foto</label><button class="profile-photo-remove" id="remove-profile-photo" type="button">Remover foto</button><input id="profile-photo-input" type="file" accept="image/jpeg,image/png,image/webp" hidden></div></div>
     </div>
     <form id="profile-form" class="profile-form">
       <div class="field"><label for="profile-name">Nome exibido</label><input id="profile-name" name="name" required minlength="2" maxlength="80" autocomplete="name"><p class="profile-hint">Este nome aparece no painel e pode ser alterado quando você quiser.</p></div>
@@ -1150,34 +1158,81 @@
     const profileDialog = document.getElementById('profile-dialog');
     const profileForm = document.getElementById('profile-form');
     const profileNameInput = document.getElementById('profile-name');
+    const profilePhotoInput = document.getElementById('profile-photo-input');
+    let savedAvatarDataUrl = document.querySelector('[data-profile-image]:not([hidden])')?.getAttribute('src') || null;
+    let pendingAvatarDataUrl = savedAvatarDataUrl;
     function profileInitials(name) {
       return String(name || '').trim().split(/\s+/).slice(0,2).map(part=>part[0]||'').join('').toUpperCase() || 'AF';
     }
     function currentProfileName() {
       return document.querySelector('[data-profile-name]')?.textContent?.trim() || '';
     }
+    function applyProfileImage(dataUrl) {
+      document.querySelectorAll('[data-profile-image]').forEach(image=>{
+        if(dataUrl){ image.src=dataUrl; image.hidden=false; }
+        else { image.removeAttribute('src'); image.hidden=true; }
+        const initials=image.nextElementSibling;
+        if(initials) initials.hidden=Boolean(dataUrl);
+      });
+    }
     function openProfileDialog() {
       profileNameInput.value = currentProfileName();
+      profilePhotoInput.value='';
+      pendingAvatarDataUrl=savedAvatarDataUrl;
+      applyProfileImage(savedAvatarDataUrl);
       profileDialog.showModal();
       setTimeout(()=>profileNameInput.focus(),60);
     }
+    function closeProfileDialog() {
+      pendingAvatarDataUrl=savedAvatarDataUrl;
+      applyProfileImage(savedAvatarDataUrl);
+      profileDialog.close();
+    }
     document.querySelectorAll('[data-open-profile]').forEach(button=>button.addEventListener('click',openProfileDialog));
-    document.getElementById('close-profile').addEventListener('click',()=>profileDialog.close());
-    document.getElementById('cancel-profile').addEventListener('click',()=>profileDialog.close());
-    profileDialog.addEventListener('click',event=>{ if(event.target===profileDialog) profileDialog.close(); });
+    document.getElementById('close-profile').addEventListener('click',closeProfileDialog);
+    document.getElementById('cancel-profile').addEventListener('click',closeProfileDialog);
+    profileDialog.addEventListener('click',event=>{ if(event.target===profileDialog) closeProfileDialog(); });
+    profileDialog.addEventListener('cancel',event=>{ event.preventDefault(); closeProfileDialog(); });
+    profilePhotoInput.addEventListener('change',async()=>{
+      const file=profilePhotoInput.files?.[0];
+      if(!file) return;
+      if(!['image/jpeg','image/png','image/webp'].includes(file.type)){ showToast('Escolha uma foto JPG, PNG ou WebP'); profilePhotoInput.value=''; return; }
+      if(file.size>8*1024*1024){ showToast('Escolha uma foto de até 8 MB'); profilePhotoInput.value=''; return; }
+      const objectUrl=URL.createObjectURL(file);
+      try {
+        const source=await new Promise((resolve,reject)=>{ const image=new Image(); image.onload=()=>resolve(image); image.onerror=()=>reject(new Error('Não foi possível abrir essa imagem.')); image.src=objectUrl; });
+        const canvas=document.createElement('canvas');
+        canvas.width=320; canvas.height=320;
+        const context=canvas.getContext('2d');
+        const side=Math.min(source.naturalWidth,source.naturalHeight);
+        context.drawImage(source,(source.naturalWidth-side)/2,(source.naturalHeight-side)/2,side,side,0,0,320,320);
+        pendingAvatarDataUrl=canvas.toDataURL('image/webp',.82);
+        applyProfileImage(pendingAvatarDataUrl);
+        showToast('Prévia da foto pronta');
+      } catch(error) { showToast(error.message); }
+      finally { URL.revokeObjectURL(objectUrl); }
+    });
+    document.getElementById('remove-profile-photo').addEventListener('click',()=>{
+      pendingAvatarDataUrl=null;
+      profilePhotoInput.value='';
+      applyProfileImage(null);
+    });
     profileForm.addEventListener('submit',async event=>{
       event.preventDefault();
       const saveButton=document.getElementById('save-profile');
       saveButton.disabled=true;
       saveButton.textContent='Salvando…';
       try {
-        const response=await fetch('/api/profile',{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify({name:profileNameInput.value})});
+        const response=await fetch('/api/profile',{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify({name:profileNameInput.value,avatarDataUrl:pendingAvatarDataUrl})});
         const payload=await response.json();
         if(!response.ok) throw new Error(payload.error||'Não foi possível salvar seu perfil.');
         const name=payload.profile.displayName;
         const initials=profileInitials(name);
         document.querySelectorAll('[data-profile-name]').forEach(node=>node.textContent=name);
         document.querySelectorAll('[data-profile-avatar]').forEach(node=>node.textContent=initials);
+        savedAvatarDataUrl=payload.profile.avatarDataUrl||null;
+        pendingAvatarDataUrl=savedAvatarDataUrl;
+        applyProfileImage(savedAvatarDataUrl);
         document.getElementById('greeting-title').textContent=`Olá, ${name.split(/\s+/)[0]}.`;
         profileDialog.close();
         showToast('Perfil atualizado');

@@ -34,6 +34,10 @@ export async function GET(request: Request) {
     .replaceAll("Alex Martins", escapeHtml(user.displayName))
     .replaceAll("Boa noite, Alex.", `Olá, ${escapeHtml(firstName)}.`)
     .replaceAll("data-profile-avatar>AM<", `data-profile-avatar>${escapeHtml(initials)}<`)
+    .replaceAll(
+      'data-profile-image src="" hidden',
+      user.avatarDataUrl ? `data-profile-image src="${escapeHtml(user.avatarDataUrl)}"` : 'data-profile-image src="" hidden',
+    )
     .replaceAll("Plano Essencial", escapeHtml(user.email));
 
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "private, no-store" } });
