@@ -33,9 +33,8 @@ export async function GET(request: Request) {
   const html = dashboard
     .replaceAll("Alex Martins", escapeHtml(user.displayName))
     .replaceAll("Boa noite, Alex.", `Olá, ${escapeHtml(firstName)}.`)
-    .replace('<div class="avatar">AM</div>', `<div class="avatar">${escapeHtml(initials)}</div>`)
-    .replace("Plano Essencial", escapeHtml(user.email))
-    .replace("</div></div></div></aside>", `</div><a class="account-signout" href="/api/auth/logout" target="_top">Sair da conta</a></div></div></aside>`);
+    .replaceAll("data-profile-avatar>AM<", `data-profile-avatar>${escapeHtml(initials)}<`)
+    .replaceAll("Plano Essencial", escapeHtml(user.email));
 
   return new Response(html, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "private, no-store" } });
 }
