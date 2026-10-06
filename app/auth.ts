@@ -7,6 +7,7 @@ export type AionUser = {
   userId: string;
   displayName: string;
   email: string;
+  avatarDataUrl?: string | null;
 };
 
 const COOKIE_NAME = "aion_session";
@@ -73,10 +74,11 @@ export async function getCurrentUser(): Promise<AionUser | null> {
   const token = cookieStore.get(COOKIE_NAME)?.value;
   if (!token) return null;
   const tokenHash = await sha256(token);
-  const [row] = await queryRows<{ id: string; name: string; email: string; expires_at: string }>(
-    `SELECT users.id, users.name, users.email, sessions.expires_at
+  const [row] = await queryRows<{ id: string; name: string; email: string; expires_at: string; avatar_data_url: string | null }>(
+    `SELECT users.id, users.name, users.email, sessions.expires_at, profiles.avatar_data_url
      FROM auth_sessions sessions
      JOIN auth_users users ON users.id = sessions.user_id
+     LEFT JOIN profiles ON profiles.user_id = users.id
      WHERE sessions.token_hash = ?
      LIMIT 1`,
     [tokenHash],
@@ -86,7 +88,7 @@ export async function getCurrentUser(): Promise<AionUser | null> {
     await runStatement("DELETE FROM auth_sessions WHERE token_hash = ?", [tokenHash]);
     return null;
   }
-  return { userId: row.id, displayName: row.name, email: row.email };
+  return { userId: row.id, displayName: row.name, email: row.email, avatarDataUrl: row.avatar_data_url ?? null };
 }
 
 export async function requireUser(returnTo = "/painel") {
@@ -112,5 +114,16 @@ export async function upsertProfile(user: AionUser) {
 
 export function isSameOrigin(request: Request) {
   const origin = request.headers.get("origin");
-  return !origin || origin === new URL(request.url).origin;
+  if (!origin) return true;
+
+  const allowedOrigins = new Set([new URL(request.url).origin]);
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const host = forwardedHost || request.headers.get("host")?.trim();
+  if (host) {
+    const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+    const protocol = forwardedProtocol || new URL(request.url).protocol.replace(":", "");
+    allowedOrigins.add(`${protocol}://${host}`);
+  }
+
+  return allowedOrigins.has(origin);
 }
