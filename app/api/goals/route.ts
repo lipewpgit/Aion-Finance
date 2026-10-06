@@ -1,5 +1,6 @@
 import { getCurrentUser, upsertProfile } from "@/app/auth";
 import { queryRows, runStatement } from "@/db/platform";
+import { parseMoneyToCents } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
 
@@ -48,15 +49,15 @@ export async function POST(request: Request) {
   if (!user) return Response.json({ error: "Entre na sua conta para continuar." }, { status: 401 });
   const body = await request.json() as Record<string, unknown>;
   const title = String(body.title ?? "").trim().slice(0, 70);
-  const target = Number(body.target);
-  if (!title || !Number.isFinite(target) || target <= 0) {
+  const targetCents = parseMoneyToCents(body.target);
+  if (!title || targetCents === null) {
     return Response.json({ error: "Escreva a meta e informe um valor desejado." }, { status: 400 });
   }
   const rows = await queryRows<GoalRow>(
     `INSERT INTO investment_goals (user_id, title, target_cents, saved_cents)
      VALUES (?, ?, ?, 0)
      RETURNING id, title, target_cents, saved_cents`,
-    [user.userId, title, Math.round(target * 100)],
+    [user.userId, title, targetCents],
   );
   return Response.json({ goal: serializeGoal(rows[0]) }, { status: 201 });
 }
@@ -66,8 +67,8 @@ export async function PATCH(request: Request) {
   if (!user) return Response.json({ error: "Entre na sua conta para continuar." }, { status: 401 });
   const body = await request.json() as Record<string, unknown>;
   const id = Number(body.id);
-  const amount = Number(body.amount);
-  if (!Number.isInteger(id) || id <= 0 || !Number.isFinite(amount) || amount <= 0) {
+  const amountCents = parseMoneyToCents(body.amount);
+  if (!Number.isInteger(id) || id <= 0 || amountCents === null) {
     return Response.json({ error: "Informe uma meta e um valor válido." }, { status: 400 });
   }
   const existing = await queryRows<{ id: number }>(
@@ -80,13 +81,13 @@ export async function PATCH(request: Request) {
     `INSERT INTO investment_transactions (user_id, type, amount_cents, transaction_date)
      VALUES (?, 'income', ?, ?)
      RETURNING id, type, amount_cents, transaction_date`,
-    [user.userId, Math.round(amount * 100), date],
+    [user.userId, amountCents, date],
   );
   const goals = await queryRows<GoalRow>(
     `UPDATE investment_goals SET saved_cents = saved_cents + ?
      WHERE id = ? AND user_id = ?
      RETURNING id, title, target_cents, saved_cents`,
-    [Math.round(amount * 100), id, user.userId],
+    [amountCents, id, user.userId],
   );
   const investment = investments[0];
   return Response.json({
