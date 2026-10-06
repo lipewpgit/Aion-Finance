@@ -1,5 +1,5 @@
 import { createSession, isSameOrigin, sessionCookie, verifyPassword } from "@/app/auth";
-import { queryRows } from "@/db/platform";
+import { isDatabaseUnavailable, queryRows } from "@/db/platform";
 
 export const dynamic = "force-dynamic";
 
@@ -16,18 +16,26 @@ export async function POST(request: Request) {
   const email = String(body.email ?? "").trim().toLowerCase().slice(0, 160);
   const password = String(body.password ?? "");
   const remember = body.remember === true || body.remember === "on";
-  const [user] = await queryRows<{ id: string; password_hash: string }>(
-    "SELECT id, password_hash FROM auth_users WHERE email = ? LIMIT 1",
-    [email],
-  );
-  if (!user || !(await verifyPassword(password, user.password_hash))) {
-    return fail("E-mail ou senha incorretos.", 401);
-  }
+  try {
+    const [user] = await queryRows<{ id: string; password_hash: string }>(
+      "SELECT id, password_hash FROM auth_users WHERE email = ? LIMIT 1",
+      [email],
+    );
+    if (!user || !(await verifyPassword(password, user.password_hash))) {
+      return fail("E-mail ou senha incorretos.", 401);
+    }
 
-  const session = await createSession(user.id, remember);
-  const response = isJson
-    ? Response.json({ ok: true, redirectTo: "/painel" })
-    : new Response(null, { status: 303, headers: { location: new URL("/painel", request.url).toString() } });
-  response.headers.set("set-cookie", sessionCookie(session.token, session.maxAge));
-  return response;
+    const session = await createSession(user.id, remember);
+    const response = isJson
+      ? Response.json({ ok: true, redirectTo: "/painel" })
+      : new Response(null, { status: 303, headers: { location: new URL("/painel", request.url).toString() } });
+    response.headers.set("set-cookie", sessionCookie(session.token, session.maxAge));
+    return response;
+  } catch (error) {
+    console.error("Aion login failed", error);
+    if (isDatabaseUnavailable(error)) {
+      return fail("O banco de dados da publicação ainda não está conectado. Tente novamente após a configuração na Vercel.", 503);
+    }
+    return fail("Não foi possível entrar agora. Tente novamente em alguns instantes.", 500);
+  }
 }
