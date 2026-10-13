@@ -10,9 +10,6 @@ export const metadata: Metadata = {
     title: "Aion Finance",
     statusBarStyle: "black-translucent",
   },
-  other: {
-    "codex-preview": "development",
-  },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
