@@ -48,6 +48,27 @@ export const transactions = sqliteTable(
   (table) => [index("transactions_user_date_idx").on(table.userId, table.transactionDate)],
 );
 
+export const notificationSettings = sqliteTable("notification_settings", {
+  userId: text("user_id").primaryKey().references(() => profiles.userId, { onDelete: "cascade" }),
+  enabled: integer("enabled").notNull().default(0),
+  lastSentDate: text("last_sent_date"),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const pushSubscriptions = sqliteTable(
+  "push_subscriptions",
+  {
+    endpoint: text("endpoint").primaryKey(),
+    userId: text("user_id").notNull().references(() => profiles.userId, { onDelete: "cascade" }),
+    p256dh: text("p256dh").notNull(),
+    auth: text("auth").notNull(),
+    createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => [index("push_subscriptions_user_idx").on(table.userId)],
+);
+
 export const investmentTransactions = sqliteTable(
   "investment_transactions",
   {

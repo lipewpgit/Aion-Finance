@@ -41,9 +41,13 @@ export async function POST(request: Request) {
   return Response.json({ transaction: { id: row.id, type: row.type, amount: row.amount_cents / 100, description: row.description, category: row.category, date: row.transaction_date } }, { status: 201 });
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   const user = await currentUser();
   if (!user) return Response.json({ error: "Entre na sua conta para continuar." }, { status: 401 });
-  await runStatement("DELETE FROM transactions WHERE user_id = ?", [user.userId]);
+  const id = Number(new URL(request.url).searchParams.get("id"));
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    return Response.json({ error: "Movimentação inválida." }, { status: 400 });
+  }
+  await runStatement("DELETE FROM transactions WHERE id = ? AND user_id = ?", [id, user.userId]);
   return Response.json({ ok: true });
 }

@@ -1,5 +1,8 @@
-import { ArrowLeft, ArrowRight, LockKeyhole, Mail, ShieldCheck, UserRound } from "lucide-react";
+"use client";
+
+import { ArrowLeft, ArrowRight, Eye, EyeOff, LockKeyhole, Mail, ShieldCheck, UserRound } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,6 +11,30 @@ type LoginCardSectionProps = {
   mode: "login" | "register";
   error?: string;
 };
+
+type PasswordFieldProps = {
+  id: string;
+  name: string;
+  label: string;
+  autoComplete: string;
+  placeholder: string;
+};
+
+function PasswordField({ id, name, label, autoComplete, placeholder }: PasswordFieldProps) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="grid gap-2">
+      <label htmlFor={id} className="text-sm text-white/65">{label}</label>
+      <div className="relative">
+        <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/28"/>
+        <Input id={id} name={name} type={visible ? "text" : "password"} required minLength={8} maxLength={128} autoComplete={autoComplete} placeholder={placeholder} className="h-11 rounded-xl border-white/10 bg-black/30 pl-10 pr-11 text-white placeholder:text-white/20 focus-visible:border-[#78e7c7]/60 focus-visible:ring-[#78e7c7]/15"/>
+        <button type="button" onClick={() => setVisible((current) => !current)} aria-label={`${visible ? "Ocultar" : "Mostrar"} ${label.toLowerCase()}`} aria-pressed={visible} className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-white/35 transition hover:bg-white/[.07] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#78e7c7]/70">
+          {visible ? <EyeOff className="size-4" aria-hidden="true"/> : <Eye className="size-4" aria-hidden="true"/>}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function AionMark() {
   return <span className="grid size-10 place-items-center rounded-full border border-white/12 bg-white/[.045] shadow-[0_0_28px_rgba(120,231,199,.08)]"><svg viewBox="0 0 64 64" className="size-7" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="none" stroke="#78e7c7" strokeWidth="5" strokeDasharray="98 55" strokeLinecap="round"/><path d="M23 43 32 18l9 25-9-7z" fill="#fff"/></svg></span>;
@@ -31,8 +58,8 @@ export default function LoginCardSection({ mode, error }: LoginCardSectionProps)
             <CardContent className="px-6 pb-6 sm:px-8"><form className="grid gap-4" action={registering ? "/api/auth/register" : "/api/auth/login"} method="post">
               {registering && <div className="grid gap-2"><label htmlFor="name" className="text-sm text-white/65">Nome</label><div className="relative"><UserRound className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/28"/><Input id="name" name="name" required minLength={2} autoComplete="name" placeholder="Como você quer ser chamado" className="h-11 rounded-xl border-white/10 bg-black/30 pl-10 text-white placeholder:text-white/20 focus-visible:border-[#78e7c7]/60 focus-visible:ring-[#78e7c7]/15"/></div></div>}
               <div className="grid gap-2"><label htmlFor="email" className="text-sm text-white/65">E-mail</label><div className="relative"><Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/28"/><Input id="email" name="email" type="email" required autoComplete="email" placeholder="voce@exemplo.com" className="h-11 rounded-xl border-white/10 bg-black/30 pl-10 text-white placeholder:text-white/20 focus-visible:border-[#78e7c7]/60 focus-visible:ring-[#78e7c7]/15"/></div></div>
-              <div className="grid gap-2"><label htmlFor="password" className="text-sm text-white/65">Senha</label><div className="relative"><LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/28"/><Input id="password" name="password" type="password" required minLength={8} maxLength={128} autoComplete={registering ? "new-password" : "current-password"} placeholder="Mínimo de 8 caracteres" className="h-11 rounded-xl border-white/10 bg-black/30 pl-10 text-white placeholder:text-white/20 focus-visible:border-[#78e7c7]/60 focus-visible:ring-[#78e7c7]/15"/></div></div>
-              {registering && <div className="grid gap-2"><label htmlFor="confirmPassword" className="text-sm text-white/65">Confirmar senha</label><Input id="confirmPassword" name="confirmPassword" type="password" required minLength={8} maxLength={128} autoComplete="new-password" placeholder="Digite a senha novamente" className="h-11 rounded-xl border-white/10 bg-black/30 text-white placeholder:text-white/20 focus-visible:border-[#78e7c7]/60 focus-visible:ring-[#78e7c7]/15"/></div>}
+              <PasswordField id="password" name="password" label="Senha" autoComplete={registering ? "new-password" : "current-password"} placeholder="Mínimo de 8 caracteres"/>
+              {registering && <PasswordField id="confirmPassword" name="confirmPassword" label="Confirmar senha" autoComplete="new-password" placeholder="Digite a senha novamente"/>}
               <label className="flex cursor-pointer items-center gap-2.5 text-sm text-white/45"><input name="remember" value="on" type="checkbox" defaultChecked className="size-4 accent-[#78e7c7]"/>Manter conectado neste dispositivo</label>
               {error && <div role="alert" className="rounded-xl border border-[#ff8f81]/20 bg-[#ff8f81]/[.07] px-3.5 py-3 text-sm text-[#ffb4aa]">{error}</div>}
               <button type="submit" className="mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-black shadow-[0_14px_40px_rgba(255,255,255,.09)] transition hover:scale-[1.01] hover:bg-white/90 active:scale-[.99]">{registering ? "Criar minha conta" : "Entrar na minha conta"}<ArrowRight className="size-4"/></button>

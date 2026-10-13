@@ -1,0 +1,12 @@
+{
+  "name": "Aion Finance",
+  "short_name": "Aion Finance",
+  "description": "Seu dinheiro no tempo certo.",
+  "start_url": "/painel",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
