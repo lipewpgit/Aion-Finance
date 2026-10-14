@@ -11,8 +11,9 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: [{ url: "/aion-logo.png", type: "image/png" }],
+    shortcut: [{ url: "/aion-logo.png", type: "image/png" }],
+    apple: [{ url: "/aion-logo.png", type: "image/png" }],
   },
 };
 
