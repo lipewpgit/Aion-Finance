@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ArrowRight, CalendarDays, ChartNoAxesCombined, Menu, ShieldCheck, X } from "lucide-react";
+import Image from "next/image";
 
 type AionLandingProps = {
   signInHref: string;
@@ -16,11 +17,8 @@ const ghostClass = "inline-flex h-10 items-center justify-center rounded-lg px-5
 
 function AionMark({ compact = false }: { compact?: boolean }) {
   return (
-    <span className={`relative grid ${compact ? "h-9 w-9" : "h-10 w-10"} place-items-center rounded-full border border-white/12 bg-white/[.04]`}>
-      <svg viewBox="0 0 64 64" className="h-7 w-7" aria-hidden="true">
-        <circle cx="32" cy="32" r="24" fill="none" stroke="#78e7c7" strokeWidth="5" strokeDasharray="98 55" strokeLinecap="round" />
-        <path d="M23 43 32 18l9 25-9-7z" fill="#fff" />
-      </svg>
+    <span className={`relative block ${compact ? "h-9 w-9" : "h-10 w-10"} overflow-hidden rounded-xl border border-white/12 bg-white/[.04]`}>
+      <Image src="/aion-logo.png" alt="" aria-hidden="true" fill sizes={compact ? "36px" : "40px"} className="scale-[1.9] object-contain" />
     </span>
   );
 }
@@ -73,7 +71,7 @@ export default function Component({ signInHref, dashboardHref, signedIn, display
     <main className="min-h-screen overflow-hidden bg-[#050506] font-['Poppins','Segoe_UI',sans-serif] text-white selection:bg-[#78e7c7] selection:text-black">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[.07] bg-black/75 backdrop-blur-xl">
         <nav className="relative mx-auto flex h-[76px] max-w-7xl items-center justify-between px-6">
-          <a href="#inicio" className="flex items-center gap-3" aria-label="Aion Finance — início"><AionMark compact /><span className="text-sm font-semibold tracking-[-.02em]">Aion Finance</span></a>
+          <a href="#inicio" className="flex items-center" aria-label="Aion Finance — início"><Image src="/aion-logo.png" alt="Aion Finance" width={136} height={64} className="h-16 w-[136px] object-contain" priority /></a>
           <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex"><a href="#recursos" className="text-sm text-white/45 transition hover:text-white">Recursos</a><a href="#painel" className="text-sm text-white/45 transition hover:text-white">Seu painel</a><a href="#seguranca" className="text-sm text-white/45 transition hover:text-white">Segurança</a></div>
           <div className="hidden items-center gap-2 md:flex">{signedIn && signOutHref ? <a href={signOutHref} target="_top" className={ghostClass}>Sair</a> : <a href={signInHref} target="_top" className={ghostClass}>Entrar</a>}<a href={actionHref} target="_top" className="inline-flex h-10 items-center justify-center rounded-lg bg-white px-5 text-sm font-semibold text-black transition hover:bg-white/85">{signedIn ? "Continuar" : "Criar conta"}</a></div>
           <button type="button" className="rounded-lg p-2 text-white md:hidden" onClick={() => setMobileMenuOpen((open) => !open)} aria-label="Abrir menu">{mobileMenuOpen ? <X /> : <Menu />}</button>

@@ -261,6 +261,46 @@
 
     .transactions { overflow:hidden; }
     .transactions .panel-head { padding:24px 24px 0; }
+
+    .ledger-tabs { display:flex; gap:8px; padding:18px 24px 0; border-bottom:1px solid rgba(150,153,164,.16); }
+    .ledger-tab { position:relative; padding:0 2px 14px; border:0; color:var(--muted); background:transparent; font-size:13px; font-weight:800; transition:color .2s ease,transform .2s ease; }
+    .ledger-tab + .ledger-tab { margin-left:12px; }
+    .ledger-tab:hover { color:var(--ink); transform:translateY(-1px); }
+    .ledger-tab.active { color:var(--ink); }
+    .ledger-tab.active::after { content:""; position:absolute; left:0; right:0; bottom:-1px; height:3px; border-radius:3px 3px 0 0; background:linear-gradient(90deg,var(--mint),#7aa7ff); }
+    .ledger-view[hidden] { display:none !important; }
+    .future-view { padding:22px 24px 25px; }
+    .future-hero { position:relative; overflow:hidden; display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding:22px; border:1px solid rgba(120,231,199,.2); border-radius:21px; background:linear-gradient(135deg,rgba(120,231,199,.11),rgba(122,167,255,.08)); }
+    .future-hero::after { content:""; position:absolute; width:170px; height:170px; right:-80px; bottom:-105px; border:24px solid rgba(120,231,199,.07); border-radius:50%; }
+    .future-kicker { display:block; margin-bottom:7px; color:var(--mint); font-size:11px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+    .future-hero h3 { margin:0; font:700 23px/1.12 Georgia,serif; }
+    .future-hero p { max-width:480px; margin:8px 0 0; color:var(--muted); font-size:13px; }
+    .future-total { position:relative; z-index:1; white-space:nowrap; text-align:right; font:700 24px/1.1 Georgia,serif; }
+    .future-total small { display:block; margin-top:7px; color:var(--muted); font:600 11px/1.2 "Poppins",sans-serif; }
+    .future-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:14px 0 18px; }
+    .future-stat { padding:14px; border:1px solid rgba(150,153,164,.15); border-radius:16px; background:rgba(255,255,255,.025); }
+    .future-stat span { display:block; color:var(--muted); font-size:11px; }
+    .future-stat strong { display:block; margin-top:4px; color:var(--ink); font-size:14px; }
+    .future-list-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:9px; }
+    .future-list-head strong { font-size:13px; }
+    .future-list-head span { color:var(--muted); font-size:11px; }
+    .future-list { display:grid; gap:8px; }
+    .future-item { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:12px; align-items:center; padding:13px 14px; border:1px solid rgba(150,153,164,.14); border-radius:15px; background:rgba(255,255,255,.022); animation:futureItemIn .42s cubic-bezier(.2,.8,.2,1) both; }
+    .future-date { display:grid; place-items:center; width:42px; height:42px; border-radius:13px; color:#07120f; background:var(--mint); font-weight:900; line-height:1; }
+    .future-date small { display:block; margin-top:3px; font-size:8px; letter-spacing:.06em; }
+    .future-copy { min-width:0; }
+    .future-copy strong,.future-copy span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .future-copy strong { font-size:13px; }
+    .future-copy span { margin-top:3px; color:var(--muted); font-size:11px; }
+    .future-side { display:flex; align-items:center; gap:8px; }
+    .future-amount { white-space:nowrap; color:var(--coral); font:700 13px Consolas,monospace; }
+    .future-empty { padding:26px 18px; border:1px dashed rgba(150,153,164,.24); border-radius:17px; color:var(--muted); text-align:center; }
+    .future-empty strong { display:block; margin-bottom:5px; color:var(--ink); }
+    .future-action { margin-top:14px; }
+    .future-action .primary-button { justify-content:center; width:100%; }
+    .chart-bars rect { transform-box:fill-box; transform-origin:center bottom; }
+    @keyframes futureItemIn { from { opacity:0; transform:translateY(9px); } to { opacity:1; transform:none; } }
+
     .link-button { border:0; color:#4c55b9; background:transparent; font-weight:800; font-size:13px; }
     .transaction-list { display:grid; }
     .transaction { display:grid; grid-template-columns:46px minmax(0,1fr) auto; align-items:center; gap:13px; padding:15px 24px; border-top:1px solid #edf0f5; }
@@ -274,11 +314,11 @@
     .tx-amount { text-align:right; font:700 14px/1.2 Consolas,monospace; }
     .tx-amount.in { color:#168365; }
     .tx-status { color:var(--muted); font:11px "Segoe UI",sans-serif; margin-top:4px; }
-    .transaction-end { display:flex; align-items:center; justify-content:flex-end; gap:10px; }
-    .transaction-delete { display:grid; place-items:center; width:34px; height:34px; flex:0 0 auto; border:1px solid transparent; border-radius:10px; color:#747781; background:transparent; transition:.18s ease; }
-    .transaction-delete:hover { color:var(--coral); border-color:rgba(255,143,129,.22); background:rgba(255,143,129,.08); }
-    .transaction-delete:disabled { cursor:wait; opacity:.38; }
-    .transaction-delete svg { width:16px; height:16px; }
+    .tx-side { display:flex; align-items:center; justify-content:flex-end; gap:10px; }
+    .tx-delete { display:grid; place-items:center; width:34px; height:34px; flex:0 0 auto; border:1px solid transparent; border-radius:10px; color:#747781; background:transparent; transition:.18s ease; }
+    .tx-delete:hover { color:var(--coral); border-color:rgba(255,143,129,.22); background:rgba(255,143,129,.08); }
+    .tx-delete:disabled { cursor:wait; opacity:.38; }
+    .tx-delete svg { width:16px; height:16px; stroke-width:1.9; }
     .transaction-filters { display:flex; padding:4px; border:1px solid var(--line); border-radius:11px; background:#08090b; }
     .transaction-filters button { min-height:30px; padding:0 10px; border:0; border-radius:8px; color:var(--muted); background:transparent; font-size:11px; font-weight:800; }
     .transaction-filters button.active { color:#050506; background:#fff; }
@@ -548,11 +588,21 @@
       .calendar-glass,.agenda-panel { padding:20px; }
       .calendar-day { min-height:36px; border-radius:10px; font-size:13px; }
       .transaction { padding:14px 18px; }
+      .tx-side { gap:5px; }
+      .tx-delete { width:32px; height:32px; }
       .transactions .panel-head { padding:20px 18px 0; }
       .transactions .panel-head { flex-direction:column; }
       .transaction-filters { width:100%; }
       .transaction-filters button { flex:1; }
       .notification-panel { position:fixed; top:78px; right:18px; }
+      .ledger-tabs { padding:16px 18px 0; overflow-x:auto; }
+      .ledger-tab { white-space:nowrap; }
+      .future-view { padding:18px; }
+      .future-hero { flex-direction:column; padding:18px; }
+      .future-total { text-align:left; }
+      .future-stats { grid-template-columns:1fr; }
+      .future-item { grid-template-columns:40px minmax(0,1fr); }
+      .future-side { grid-column:2; justify-content:space-between; }
       .health-row { align-items:flex-start; }
       .health-ring { width:82px; height:82px; }
       .goal { grid-template-columns:44px minmax(0,1fr); }
@@ -685,8 +735,8 @@
     .mobile-bar { grid-template-columns:repeat(7,minmax(0,1fr)); border:1px solid var(--line); background:rgba(5,5,6,.96); box-shadow:0 18px 50px rgba(0,0,0,.55); }
     .empty-state { display:grid; place-items:center; min-height:150px; padding:28px; border:1px dashed var(--line); border-radius:16px; color:var(--muted); text-align:center; }
     .empty-state strong { display:block; margin-bottom:7px; color:var(--ink); font-size:14px; }
-    .reset-button { display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:0 14px; border:1px solid var(--line); border-radius:12px; color:var(--muted); background:#111216; cursor:pointer; }
-    .reset-button:hover { color:#ffb4aa; border-color:rgba(255,143,129,.35); }
+    .next-period-button { display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:0 14px; border:1px solid var(--line); border-radius:12px; color:var(--muted); background:#111216; cursor:pointer; }
+    .next-period-button:hover { color:var(--mint); border-color:rgba(120,231,199,.35); }
     .conversion-stage { display:grid; place-items:center; margin:28px 0 4px; }
     .conversion-card { width:min(100%,448px); padding:24px; border:1px solid rgba(255,255,255,.045); border-radius:18px; color:var(--ink); background:#171717; box-shadow:0 22px 70px rgba(0,0,0,.28); }
     .conversion-card-head { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:24px; }
@@ -883,8 +933,8 @@
     }
     @media (max-width:420px) {
       .topbar { gap:10px; }
-      .reset-button { width:44px; padding:0; justify-content:center; font-size:0; }
-      .reset-button::before { content:"↺"; font-size:19px; }
+      .next-period-button { width:44px; padding:0; justify-content:center; font-size:0; }
+      .next-period-button::before { content:"→"; font-size:19px; }
       .mobile-bar { left:8px; right:8px; padding:7px 4px; }
       .mobile-bar button { font-size:8px; letter-spacing:-.02em; }
       .mobile-bar svg { width:18px; height:18px; }
@@ -901,7 +951,8 @@
       </div>
       <nav class="nav">
         <button class="active" data-target="overview"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Visão geral</button>
-        <button data-target="transactions"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h11l-3-3m3 3-3 3M17 17H6l3 3m-3-3 3-3"/></svg>Movimentações</button>
+        <button data-target="transactions" data-open-ledger="recent"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h11l-3-3m3 3-3 3M17 17H6l3 3m-3-3 3-3"/></svg>Movimentações</button>
+        <button data-target="transactions" data-open-ledger="future"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4m8-4v4M3 10h18m-5 5h4"/></svg>Gastos futuros</button>
         <button data-target="history"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M3.5 5.5 6 5l.5 2.5"/></svg>Histórico mensal</button>
         <button data-target="budget"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg>Orçamento</button>
         <button data-target="quotes"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.3 4.2 6.3 4.2 9S15 17.7 12 21c-3-3.3-4.2-6.3-4.2-9S9 6.3 12 3Z"/></svg>Cotações</button>
@@ -929,7 +980,7 @@
             </section>
           </div>
           <button class="icon-button" id="toggle-values" aria-label="Ocultar valores" title="Ocultar valores"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></button>
-          <button class="reset-button" id="reset-data" title="Apagar movimentações, investimentos, metas e compromissos desta conta">Zerar dados</button>
+          <button class="next-period-button" id="next-period" title="Abrir a agenda do próximo mês">Próximo mês</button>
           <button class="primary-button" id="open-dialog"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nova movimentação</span></button>
         </div>
       </header>
@@ -993,8 +1044,28 @@
           </article>
 
           <article class="panel transactions" id="transactions">
-            <div class="panel-head"><div><h2>Movimentações recentes</h2><p id="transaction-count">Seu histórico começa aqui</p></div><div class="transaction-filters" role="group" aria-label="Filtrar movimentações"><button class="active" type="button" data-transaction-filter="all" aria-pressed="true">Todos</button><button type="button" data-transaction-filter="income" aria-pressed="false">Entradas</button><button type="button" data-transaction-filter="expense" aria-pressed="false">Saídas</button></div></div>
-            <div class="transaction-list" id="transaction-list"><div class="empty-state"><div><strong>Nenhuma movimentação ainda</strong>Registre uma entrada ou um gasto para começar.</div></div></div>
+            <div class="ledger-tabs" role="tablist" aria-label="Movimentações">
+              <button class="ledger-tab active" type="button" role="tab" aria-selected="true" data-ledger-tab="recent">Movimentações</button>
+              <button class="ledger-tab" type="button" role="tab" aria-selected="false" data-ledger-tab="future">Gastos futuros</button>
+            </div>
+            <div class="ledger-view" id="recent-ledger">
+              <div class="panel-head"><div><h2>Movimentações recentes</h2><p id="transaction-count">Seu histórico começa aqui</p></div><div class="transaction-filters" role="group" aria-label="Filtrar movimentações"><button class="active" type="button" data-transaction-filter="all" aria-pressed="true">Todos</button><button type="button" data-transaction-filter="income" aria-pressed="false">Entradas</button><button type="button" data-transaction-filter="expense" aria-pressed="false">Saídas</button></div></div>
+              <div class="transaction-list" id="transaction-list"><div class="empty-state"><div><strong>Nenhuma movimentação ainda</strong>Registre uma entrada ou um gasto para começar.</div></div></div>
+            </div>
+            <div class="ledger-view future-view" id="future-ledger" hidden>
+              <div class="future-hero">
+                <div><span class="future-kicker">Planejamento automático</span><h3 id="future-month-label">Próximo mês</h3><p>Todo gasto lançado com data do próximo mês aparece aqui sem diminuir o saldo atual.</p></div>
+                <div class="future-total money" id="future-total">R$ 0,00<small>total programado</small></div>
+              </div>
+              <div class="future-stats">
+                <div class="future-stat"><span>Contas programadas</span><strong id="future-count">0 gastos</strong></div>
+                <div class="future-stat"><span>Primeiro vencimento</span><strong id="future-first">Nenhum</strong></div>
+                <div class="future-stat"><span>Média por dia</span><strong class="money" id="future-daily">R$ 0,00</strong></div>
+              </div>
+              <div class="future-list-head"><strong>Agenda de gastos</strong><span id="future-list-caption">Nada programado</span></div>
+              <div class="future-list" id="future-list"></div>
+              <div class="future-action"><button class="primary-button" type="button" id="add-future-expense">+ Programar gasto para o próximo mês</button></div>
+            </div>
           </article>
         </div>
 
@@ -1199,7 +1270,7 @@
 
   <script src="assets/d3.v7.min.js"></script>
   <script>
-    const state = { hidden: false, filter: 'all', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month', activeHistoryMonth: null, transactions: [], investments: [], goals: [] };
+    const state = { hidden: false, filter: 'all', ledgerTab: 'recent', chartPeriod: '6M', chartView: 'curve', calendarMode: 'month', activeHistoryMonth: null, transactions: [], investments: [], goals: [] };
     const calendarState = { current:new Date(new Date().getFullYear(),new Date().getMonth(),1), selected:new Date(), events:[] };
     const dialog = document.getElementById('transaction-dialog');
     const form = document.getElementById('transaction-form');
@@ -1211,11 +1282,13 @@
     const goalForm = document.getElementById('goal-form');
     const goalList = document.getElementById('goal-list');
     const dateInput = document.getElementById('date');
-    dateInput.value = dateKey(new Date());
-    const now = new Date();
-    document.getElementById('today-label').textContent = now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}).replace(/^./,character=>character.toUpperCase());
-    const daysRemaining = new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-now.getDate();
-    document.getElementById('budget-period').textContent = `${now.toLocaleDateString('pt-BR',{month:'long'}).replace(/^./,character=>character.toUpperCase())} · ${daysRemaining} dia${daysRemaining===1?'':'s'} restante${daysRemaining===1?'':'s'}`;
+    dateInput.valueAsDate = new Date();
+    function updateCurrentDateLabels(currentDate = new Date()) {
+      document.getElementById('today-label').textContent = currentDate.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}).replace(/^./,character=>character.toUpperCase());
+      const daysRemaining = new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0).getDate()-currentDate.getDate();
+      document.getElementById('budget-period').textContent = `${currentDate.toLocaleDateString('pt-BR',{month:'long'}).replace(/^./,character=>character.toUpperCase())} · ${daysRemaining} dia${daysRemaining===1?'':'s'} restante${daysRemaining===1?'':'s'}`;
+    }
+    updateCurrentDateLabels();
 
     document.getElementById('open-dialog').addEventListener('click', () => dialog.showModal());
     document.getElementById('close-dialog').addEventListener('click', () => dialog.close());
@@ -1226,10 +1299,23 @@
       return Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
     function parseMoney(value) {
-      const normalized = String(value).replace(/[^0-9,.-]/g, '').replace(/\./g, '').replace(',', '.');
+      if (typeof value === 'number') {
+        if (!Number.isFinite(value) || value <= 0) throw new Error('Informe um valor maior que zero.');
+        return Math.round(value * 100) / 100;
+      }
+      const raw = String(value ?? '').trim();
+      if (!raw || raw.includes('-')) throw new Error('Informe um valor maior que zero.');
+      const cleaned = raw.replace(/\s/g, '').replace(/[^0-9,.]/g, '');
+      const lastComma = cleaned.lastIndexOf(',');
+      const lastDot = cleaned.lastIndexOf('.');
+      let decimalIndex = Math.max(lastComma, lastDot);
+      if (lastComma === -1 && lastDot !== -1 && cleaned.length-lastDot-1 === 3) decimalIndex = -1;
+      const integerDigits = (decimalIndex === -1 ? cleaned : cleaned.slice(0,decimalIndex)).replace(/\D/g,'') || '0';
+      const decimalDigits = decimalIndex === -1 ? '' : cleaned.slice(decimalIndex+1).replace(/\D/g,'');
+      const normalized = decimalDigits ? `${integerDigits}.${decimalDigits}` : integerDigits;
       const amount = Number(normalized);
       if (!Number.isFinite(amount) || amount <= 0) throw new Error('Informe um valor maior que zero.');
-      return amount;
+      return Math.round(amount * 100) / 100;
     }
     function normalizeAmount(value) {
       if (typeof value === 'number') {
@@ -1485,34 +1571,105 @@
       } catch(error) { showToast(error.message); }
       finally { saveButton.disabled=false; saveButton.textContent='Salvar nome'; }
     });
+    function transactionRow(item, status = 'Salvo na sua conta') {
+      const row = document.createElement('div');
+      row.className = 'transaction';
+      row.dataset.type = item.type;
+      row.dataset.transactionId = item.id;
+      const incoming = item.type === 'income';
+      const formattedDate = item.date ? new Date(item.date + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short' }) : 'Hoje';
+      row.innerHTML = `<div class="tx-icon ${incoming ? 'in' : ''}"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg></div><div><div class="tx-name"></div><div class="tx-meta"></div></div><div class="tx-side"><div class="tx-amount ${incoming ? 'in' : ''} money">${incoming ? '+' : '−'} ${formatMoney(item.amount)}<div class="tx-status">${status}</div></div><button class="tx-delete" type="button" data-delete-transaction="${item.id}" aria-label="Excluir movimentação" title="Excluir movimentação"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"/></svg></button></div>`;
+      row.querySelector('.tx-name').textContent = item.description;
+      row.querySelector('.tx-meta').textContent = `${item.category} · ${formattedDate}`;
+      if (state.hidden) row.querySelector('.money').classList.add('hidden-value');
+      return row;
+    }
+
+    function realizedTransactions() {
+      const today = dateKey(new Date());
+      return state.transactions.filter(item => !item.date || String(item.date) <= today);
+    }
+
+    function renderRecentTransactions() {
+      list.innerHTML = '';
+      const records = realizedTransactions().sort((a,b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.id || 0)-Number(a.id || 0));
+      const visible = state.filter === 'all' ? records : records.filter(item => item.type === state.filter);
+      visible.slice(0,100).forEach(item => list.append(transactionRow(item)));
+      if (!visible.length) {
+        const emptyLabel = state.filter === 'income' ? 'Nenhuma entrada neste filtro' : state.filter === 'expense' ? 'Nenhuma saída neste filtro' : 'Nenhuma movimentação realizada';
+        list.innerHTML = `<div class="empty-state"><div><strong>${records.length ? emptyLabel : 'Nenhuma movimentação realizada'}</strong>${records.length ? 'Escolha outro filtro para ver seus lançamentos.' : 'Registre uma entrada ou um gasto para começar.'}</div></div>`;
+      }
+      document.getElementById('transaction-count').textContent = records.length ? `${records.length} ${records.length===1?'lançamento realizado':'lançamentos realizados'}` : 'Seu histórico começa aqui';
+    }
+
+    function nextMonthDetails() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(),now.getMonth()+1,1);
+      const key = `${start.getFullYear()}-${String(start.getMonth()+1).padStart(2,'0')}`;
+      return { start, key, days:new Date(start.getFullYear(),start.getMonth()+1,0).getDate() };
+    }
+
+    function renderFutureExpenses() {
+      const { start, key, days } = nextMonthDetails();
+      const expenses = state.transactions
+        .filter(item => item.type === 'expense' && String(item.date || '').startsWith(key))
+        .sort((a,b) => String(a.date).localeCompare(String(b.date)) || Number(a.id || 0)-Number(b.id || 0));
+      const total = expenses.reduce((sum,item) => sum + (Number(item.amount)||0),0);
+      document.getElementById('future-month-label').textContent = start.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).replace(/^./,letter=>letter.toUpperCase());
+      document.getElementById('future-total').innerHTML = `${formatMoney(total)}<small>total programado</small>`;
+      document.getElementById('future-count').textContent = `${expenses.length} ${expenses.length===1?'gasto':'gastos'}`;
+      document.getElementById('future-first').textContent = expenses.length ? new Date(expenses[0].date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}) : 'Nenhum';
+      document.getElementById('future-daily').textContent = formatMoney(total/days);
+      document.getElementById('future-list-caption').textContent = expenses.length ? `${expenses.length} ${expenses.length===1?'item planejado':'itens planejados'}` : 'Nada programado';
+      const futureList = document.getElementById('future-list');
+      futureList.innerHTML = '';
+      if (!expenses.length) {
+        futureList.innerHTML = '<div class="future-empty"><strong>Próximo mês está livre</strong>Use o botão abaixo para agendar uma conta. Ela ficará separada do saldo atual.</div>';
+        return;
+      }
+      expenses.forEach((item,index) => {
+        const due = new Date(item.date+'T12:00:00');
+        const row = document.createElement('div');
+        row.className = 'future-item';
+        row.style.animationDelay = `${Math.min(index*55,330)}ms`;
+        row.innerHTML = `<div class="future-date">${String(due.getDate()).padStart(2,'0')}<small>${due.toLocaleDateString('pt-BR',{month:'short'}).replace('.','').toUpperCase()}</small></div><div class="future-copy"><strong></strong><span></span></div><div class="future-side"><span class="future-amount money">− ${formatMoney(item.amount)}</span><button class="tx-delete" type="button" data-delete-transaction="${item.id}" aria-label="Excluir gasto futuro" title="Excluir gasto futuro"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"/></svg></button></div>`;
+        row.querySelector('.future-copy strong').textContent = item.description;
+        row.querySelector('.future-copy span').textContent = item.category || 'Outros';
+        if (state.hidden) row.querySelector('.money').classList.add('hidden-value');
+        futureList.append(row);
+      });
+    }
+
+    function switchLedger(tab) {
+      state.ledgerTab = tab === 'future' ? 'future' : 'recent';
+      document.querySelectorAll('[data-ledger-tab]').forEach(button => {
+        const active = button.dataset.ledgerTab === state.ledgerTab;
+        button.classList.toggle('active',active);
+        button.setAttribute('aria-selected',String(active));
+      });
+      document.getElementById('recent-ledger').hidden = state.ledgerTab !== 'recent';
+      document.getElementById('future-ledger').hidden = state.ledgerTab !== 'future';
+      if (state.ledgerTab === 'future') renderFutureExpenses();
+      if (document.body.dataset.view === 'transactions') {
+        document.querySelectorAll('.nav [data-open-ledger]').forEach(button => button.classList.toggle('active',button.dataset.openLedger===state.ledgerTab));
+      }
+    }
+
     function addTransaction({ id, type, value, amount: storedAmount, description, category, date }, refresh = true) {
       const amount = normalizeAmount(value ?? storedAmount);
       const safeDescription = String(description || '').trim();
       if (!safeDescription) throw new Error('Informe uma descrição.');
-      const row = document.createElement('div');
-      row.className = 'transaction';
-      row.dataset.type = type;
-      row.dataset.transactionId = String(id || '');
-      const incoming = type === 'income';
-      const formattedDate = date ? new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short' }) : 'Hoje';
-      row.innerHTML = `<div class="tx-icon ${incoming ? 'in' : ''}"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg></div><div><div class="tx-name"></div><div class="tx-meta"></div></div><div class="transaction-end"><div class="tx-amount ${incoming ? 'in' : ''} money">${incoming ? '+' : '−'} ${formatMoney(amount)}<div class="tx-status">${incoming ? 'Entrada salva' : 'Saída salva'}</div></div><button class="transaction-delete" type="button" data-delete-transaction aria-label="Excluir movimentação" title="Excluir movimentação"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5"/></svg></button></div>`;
-      row.querySelector('.tx-name').textContent = safeDescription;
-      row.querySelector('.tx-meta').textContent = `${category || 'Outros'} · ${formattedDate}`;
-      const deleteButton = row.querySelector('[data-delete-transaction]');
-      if (id) deleteButton.dataset.deleteTransaction = String(id);
-      else deleteButton.hidden = true;
-      list.querySelector('.empty-state')?.remove();
-      list.prepend(row);
-      row.hidden = state.filter !== 'all' && row.dataset.type !== state.filter;
-      state.transactions.push({ id, type, amount, description:safeDescription, category:category || 'Outros', date:date || null });
-      if (state.hidden) row.querySelector('.money').classList.add('hidden-value');
-      document.getElementById('transaction-count').textContent = `${list.children.length} lançamentos recentes`;
+      const normalized = { id, type, amount, description:safeDescription, category:category || 'Outros', date:date || dateKey(new Date()) };
+      state.transactions.push(normalized);
+      renderRecentTransactions();
+      renderFutureExpenses();
       if (refresh) renderFinancialSummary();
-      return { id, type, amount, description: safeDescription, category: category || 'Outros', date: date || null };
+      return normalized;
     }
 
     function financialTotals() {
-      return state.transactions.reduce((totals,item) => {
+      const today = dateKey(new Date());
+      return state.transactions.filter(item => !item.date || String(item.date) <= today).reduce((totals,item) => {
         if (item.type === 'income') totals.income += Number(item.amount) || 0;
         else totals.expense += Number(item.amount) || 0;
         return totals;
@@ -1544,7 +1701,7 @@
         months.set(key,created);
         return created;
       };
-      state.transactions.forEach(item => {
+      state.transactions.filter(item => !item.date || String(item.date) <= dateKey(new Date())).forEach(item => {
         const date = String(item.date || '');
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
         const key = date.slice(0,7);
@@ -1665,7 +1822,7 @@
     function renderBudgetFromTransactions() {
       const budgetList = document.getElementById('budget-list');
       const categories = {};
-      state.transactions.filter(item => item.type === 'expense').forEach(item => { categories[item.category] = (categories[item.category] || 0) + item.amount; });
+      state.transactions.filter(item => item.type === 'expense' && (!item.date || String(item.date) <= dateKey(new Date()))).forEach(item => { categories[item.category] = (categories[item.category] || 0) + item.amount; });
       const entries = Object.entries(categories).sort((a,b) => b[1]-a[1]);
       if (!entries.length) { budgetList.innerHTML = '<div class="empty-state"><div><strong>Orçamento zerado</strong>Seus gastos aparecerão aqui, separados por categoria.</div></div>'; return; }
       const maximum = Math.max(...entries.map(([,value]) => value),1);
@@ -1674,18 +1831,20 @@
     }
     function renderFinancialSummary() {
       const totals = financialTotals();
+      const realizedCount = realizedTransactions().length;
       const balance = totals.income - totals.expense;
       document.getElementById('summary-balance').textContent = formatMoney(balance);
       document.getElementById('summary-income').textContent = formatMoney(totals.income);
       document.getElementById('summary-expense').textContent = formatMoney(totals.expense);
-      document.getElementById('summary-balance-note').textContent = state.transactions.length ? `${state.transactions.length} ${state.transactions.length === 1 ? 'movimentação salva' : 'movimentações salvas'}` : 'Adicione sua primeira movimentação';
-      document.getElementById('summary-income-note').textContent = totals.income ? 'Total das entradas registradas' : 'Nenhuma entrada registrada';
-      document.getElementById('summary-expense-note').textContent = totals.expense ? `${formatMoney(Math.max(balance,0))} disponíveis` : 'Nenhum gasto registrado';
+      document.getElementById('summary-balance-note').textContent = realizedCount ? `${realizedCount} ${realizedCount === 1 ? 'movimentação realizada' : 'movimentações realizadas'}` : 'Adicione sua primeira movimentação';
+      document.getElementById('summary-income-note').textContent = totals.income ? 'Total das entradas realizadas' : 'Nenhuma entrada registrada';
+      document.getElementById('summary-expense-note').textContent = totals.expense ? `${formatMoney(Math.max(balance,0))} disponíveis` : 'Nenhum gasto realizado';
       updateHealthFromTransactions(totals);
       renderBudgetFromTransactions();
       renderMonthlyHistory();
       renderDailyReport();
       renderNotificationCenter();
+      renderFutureExpenses();
       if (typeof rebuildChartData === 'function') rebuildChartData();
     }
 
@@ -1717,17 +1876,44 @@
         if (!response.ok) return;
         const payload = await response.json();
         if (hydrationId !== transactionHydrationId) return;
-        list.innerHTML = '';
-        state.transactions = [];
-        const transactions = payload.transactions || [];
-        [...transactions.slice(0,100)].reverse().forEach(item => addTransaction(item,false));
+        const transactions = Array.isArray(payload.transactions) ? payload.transactions : [];
         state.transactions = transactions.map(item => ({ ...item, amount:Number(item.amount)||0 }));
-        if (!transactions.length) list.innerHTML = '<div class="empty-state"><div><strong>Nenhuma movimentação ainda</strong>Registre uma entrada ou um gasto para começar.</div></div>';
-        document.getElementById('transaction-count').textContent = transactions.length ? `${transactions.length} ${transactions.length===1?'lançamento salvo':'lançamentos salvos'}` : 'Seu histórico começa aqui';
+        renderRecentTransactions();
+        renderFutureExpenses();
         renderFinancialSummary();
       } catch (error) { console.error('Não foi possível sincronizar as movimentações.', error); }
     }
     hydrateTransactions();
+
+    async function deleteTransactionFrom(button) {
+      const id = Number(button.dataset.deleteTransaction);
+      const transaction = state.transactions.find(item => Number(item.id) === id);
+      if (!transaction) return;
+      const label = `${transaction.description} — ${formatMoney(transaction.amount)}`;
+      if (!confirm(`Excluir a movimentação “${label}”?`)) return;
+      button.disabled = true;
+      try {
+        const response = await fetch(`/api/transactions?id=${id}`,{method:'DELETE'});
+        const payload = await response.json().catch(()=>({}));
+        if (!response.ok) throw new Error(payload.error || 'Não foi possível excluir a movimentação.');
+        state.transactions = state.transactions.filter(item => Number(item.id) !== id);
+        renderRecentTransactions();
+        renderFutureExpenses();
+        renderFinancialSummary();
+        showToast('Movimentação excluída');
+      } catch(error) {
+        button.disabled = false;
+        showToast(error.message);
+      }
+    }
+    list.addEventListener('click',event => {
+      const button = event.target.closest('[data-delete-transaction]');
+      if (button) deleteTransactionFrom(button);
+    });
+    document.getElementById('future-list').addEventListener('click',event => {
+      const button = event.target.closest('[data-delete-transaction]');
+      if (button) deleteTransactionFrom(button);
+    });
 
     investmentForm.addEventListener('submit',async event => {
       event.preventDefault();
@@ -1811,48 +1997,45 @@
     });
     function applyTransactionFilter(filter) {
       state.filter = ['all','income','expense'].includes(filter) ? filter : 'all';
-      list.querySelectorAll('.transaction').forEach(row=>{ row.hidden = state.filter!=='all' && row.dataset.type!==state.filter; });
       document.querySelectorAll('[data-transaction-filter]').forEach(button=>{
         const active = button.dataset.transactionFilter===state.filter;
         button.classList.toggle('active',active);
         button.setAttribute('aria-pressed',String(active));
       });
+      renderRecentTransactions();
     }
     document.querySelectorAll('[data-transaction-filter]').forEach(button=>button.addEventListener('click',()=>applyTransactionFilter(button.dataset.transactionFilter)));
-    list.addEventListener('click',async event=>{
-      const button = event.target.closest('[data-delete-transaction]');
-      if (!button) return;
-      const id = Number(button.dataset.deleteTransaction);
-      const transaction = state.transactions.find(item=>Number(item.id)===id);
-      if (!transaction || !confirm(`Excluir a movimentação “${transaction.description}” de ${formatMoney(transaction.amount)}?`)) return;
-      button.disabled = true;
-      try {
-        const response = await fetch(`/api/transactions?id=${encodeURIComponent(id)}`,{method:'DELETE'});
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload.error||'Não foi possível excluir a movimentação.');
-        transactionHydrationId += 1;
-        await hydrateTransactions();
-        applyTransactionFilter(state.filter);
-        showToast('Movimentação excluída');
-      } catch(error) {
-        button.disabled = false;
-        showToast(error.message);
-      }
+    document.querySelectorAll('[data-ledger-tab]').forEach(button => button.addEventListener('click',()=>switchLedger(button.dataset.ledgerTab)));
+    document.getElementById('add-future-expense').addEventListener('click',()=>{
+      const { key } = nextMonthDetails();
+      if (form.elements.type) form.elements.type.value = 'expense';
+      dateInput.value = `${key}-01`;
+      dialog.showModal();
+      setTimeout(()=>form.elements.description?.focus(),0);
     });
     function showView(target) {
       document.body.dataset.view = target;
-      document.querySelectorAll('[data-target]').forEach(item => item.classList.toggle('active', item.dataset.target === target));
+      document.querySelectorAll('[data-target]').forEach(item => {
+        const matchingTarget = item.dataset.target === target;
+        const matchingLedger = target !== 'transactions' || !item.dataset.openLedger || item.dataset.openLedger === state.ledgerTab;
+        item.classList.toggle('active',matchingTarget && matchingLedger);
+      });
+      if (target === 'overview') requestAnimationFrame(()=>updateChart(state.chartPeriod));
       window.scrollTo({ top:0, behavior:'smooth' });
     }
-    document.querySelectorAll('[data-target]').forEach(button => button.addEventListener('click', () => showView(button.dataset.target)));
+    document.querySelectorAll('[data-target]').forEach(button => button.addEventListener('click', () => {
+      if (button.dataset.openLedger) switchLedger(button.dataset.openLedger);
+      showView(button.dataset.target);
+    }));
 
     const scrollToQuotes = () => showView('quotes');
     document.getElementById('market-link').addEventListener('click', scrollToQuotes);
-    document.getElementById('reset-data').addEventListener('click', async () => {
-      if (!confirm('Zerar todas as movimentações, investimentos, metas e compromissos desta conta? Essa ação não pode ser desfeita.')) return;
-      const responses = await Promise.all([fetch('/api/transactions',{method:'DELETE'}),fetch('/api/investments',{method:'DELETE'}),fetch('/api/goals',{method:'DELETE'}),fetch('/api/events',{method:'DELETE'})]);
-      if (responses.some(response => !response.ok)) { showToast('Não foi possível zerar os dados agora.'); return; }
-      location.reload();
+    document.getElementById('next-period').addEventListener('click', () => {
+      const nextMonth = new Date(calendarState.current.getFullYear(), calendarState.current.getMonth()+1, 1);
+      calendarState.current = nextMonth;
+      calendarState.selected = new Date(nextMonth);
+      showView('calendar');
+      renderCalendar();
     });
 
     function initMarketGlobe() {
@@ -2163,6 +2346,47 @@
         return `${path} C${(previous.x+middle).toFixed(1)},${previous.y.toFixed(1)} ${(point.x-middle).toFixed(1)},${point.y.toFixed(1)} ${point.x.toFixed(1)},${point.y.toFixed(1)}`;
       }, '');
     }
+    function animateChartNumber(element, target) {
+      if (!element) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.textContent = formatMoney(target);
+        return;
+      }
+      const started = performance.now();
+      const duration = 720;
+      const from = Number(element.dataset.numericValue || 0);
+      element.dataset.numericValue = target;
+      const tick = now => {
+        const progress = Math.min(1,(now-started)/duration);
+        const eased = 1-Math.pow(1-progress,3);
+        element.textContent = formatMoney(from+(target-from)*eased);
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+    function animateChartElements() {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const lines = [document.getElementById('income-line'),document.getElementById('expense-line')];
+      lines.forEach((line,index) => {
+        line.getAnimations().forEach(animation=>animation.cancel());
+        const length = Math.max(1,line.getTotalLength());
+        line.style.strokeDasharray = String(length);
+        line.style.strokeDashoffset = '0';
+        line.animate([{strokeDashoffset:String(length),opacity:.25},{strokeDashoffset:'0',opacity:1}],{duration:1050,delay:index*130,easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'});
+      });
+      const area = document.getElementById('chart-area');
+      area.getAnimations().forEach(animation=>animation.cancel());
+      area.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],{duration:850,delay:180,easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'});
+      [document.getElementById('income-dot'),document.getElementById('expense-dot')].forEach((dot,index)=>{
+        dot.getAnimations().forEach(animation=>animation.cancel());
+        dot.animate([{opacity:0,transform:'scale(.2)'},{opacity:1,transform:'scale(1)'}],{duration:460,delay:720+index*120,easing:'cubic-bezier(.2,1.6,.4,1)',fill:'both'});
+      });
+      document.querySelectorAll('#bars-view rect').forEach((bar,index)=>{
+        bar.getAnimations().forEach(animation=>animation.cancel());
+        bar.animate([{opacity:.08,transform:'scaleY(0)'},{opacity:1,transform:'scaleY(1)'}],{duration:620,delay:index*45,easing:'cubic-bezier(.2,.85,.2,1)',fill:'both'});
+      });
+    }
+    
     function updateChart(period) {
       const data = chartData[period];
       state.chartPeriod = period;
@@ -2182,13 +2406,11 @@
       incomeLine.setAttribute('d', incomePath);
       expenseLine.setAttribute('d', expensePath);
       document.getElementById('chart-area').setAttribute('d', `${incomePath} L720,210 L0,210 Z`);
-      [[incomeLine,incomePoints],[expenseLine,expensePoints]].forEach(([line]) => {
-        line.style.strokeDasharray = '1200'; line.style.strokeDashoffset = '1200';
-        requestAnimationFrame(() => line.style.strokeDashoffset = '0');
-      });
       const incomeLast = incomePoints.at(-1), expenseLast = expensePoints.at(-1);
-      document.getElementById('income-dot').setAttribute('cx',incomeLast.x); document.getElementById('income-dot').setAttribute('cy',incomeLast.y);
-      document.getElementById('expense-dot').setAttribute('cx',expenseLast.x); document.getElementById('expense-dot').setAttribute('cy',expenseLast.y);
+      document.getElementById('income-dot').setAttribute('cx',incomeLast.x);
+      document.getElementById('income-dot').setAttribute('cy',incomeLast.y);
+      document.getElementById('expense-dot').setAttribute('cx',expenseLast.x);
+      document.getElementById('expense-dot').setAttribute('cy',expenseLast.y);
       document.getElementById('chart-labels').innerHTML = data.labels.map((label,index) => `<span>${data.labels.length > 6 && innerWidth < 640 && index % 2 ? '' : label}</span>`).join('');
       document.getElementById('chart-subtitle').textContent = data.subtitle.replace('Entradas e saídas','Saldo entre entradas e saídas');
       document.querySelector('.chart-wrap svg').setAttribute('aria-label', `Gráfico de entradas e saídas: período ${period}`);
@@ -2200,7 +2422,7 @@
       const trendNode = document.getElementById('chart-trend');
       trendNode.dataset.trend = trendValue > .05 ? 'up' : trendValue < -.05 ? 'down' : 'flat';
       trendNode.textContent = `${trendValue > .05 ? '↗ +' : trendValue < -.05 ? '↘ ' : ''}${Math.abs(trendValue).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})}%`;
-      document.getElementById('chart-balance-head').textContent = formatMoney(periodBalance);
+      animateChartNumber(document.getElementById('chart-balance-head'),periodBalance);
       document.getElementById('chart-delta').textContent = `${lastBalance-firstBalance >= 0 ? '+' : '−'} ${formatMoney(Math.abs(lastBalance-firstBalance)).replace(',00','')}`;
       document.getElementById('chart-peak').textContent = formatMoney(Math.max(...monthlyBalances)).replace(',00','');
       document.getElementById('chart-low').textContent = formatMoney(Math.min(...monthlyBalances)).replace(',00','');
@@ -2211,9 +2433,9 @@
       barGroup.innerHTML = data.labels.map((_,index) => {
         const incomeY = incomePoints[index].y, expenseY = expensePoints[index].y;
         const x = index*slot + slot/2;
-          return `<rect x="${x-barWidth-2}" y="190" width="${barWidth}" height="0" data-y="${incomeY}" data-height="${190-incomeY}" rx="5" fill="#f1f1ef"/><rect x="${x+2}" y="190" width="${barWidth}" height="0" data-y="${expenseY}" data-height="${190-expenseY}" rx="5" fill="#78e7c7"/>`;
+        return `<rect x="${x-barWidth-2}" y="${incomeY}" width="${barWidth}" height="${190-incomeY}" rx="5" fill="#f1f1ef"/><rect x="${x+2}" y="${expenseY}" width="${barWidth}" height="${190-expenseY}" rx="5" fill="#78e7c7"/>`;
       }).join('');
-      requestAnimationFrame(()=>requestAnimationFrame(()=>barGroup.querySelectorAll('rect').forEach(rect=>{ rect.setAttribute('y',rect.dataset.y); rect.setAttribute('height',rect.dataset.height); })));
+      requestAnimationFrame(animateChartElements);
     }
     document.querySelectorAll('.segmented button').forEach(button => button.addEventListener('click', () => {
       document.querySelectorAll('.segmented button').forEach(item => item.classList.remove('active'));
@@ -2225,6 +2447,7 @@
       document.querySelector('.metric-card').dataset.view = state.chartView;
       document.getElementById('curve-view').toggleAttribute('hidden',state.chartView !== 'curve');
       document.getElementById('bars-view').toggleAttribute('hidden',state.chartView !== 'bars');
+      requestAnimationFrame(()=>updateChart(state.chartPeriod));
     }));
     const chartInteractive = document.getElementById('chart-interactive');
     let keyboardChartIndex = 0;
@@ -2262,6 +2485,16 @@
     });
     chartInteractive.addEventListener('blur', hideChartTooltip);
     rebuildChartData();
+    const metricCard = document.querySelector('.metric-card');
+    if ('IntersectionObserver' in window) {
+      const chartObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry=>entry.isIntersecting)) {
+          requestAnimationFrame(()=>updateChart(state.chartPeriod));
+          chartObserver.unobserve(metricCard);
+        }
+      },{threshold:.32});
+      chartObserver.observe(metricCard);
+    }
 
     function updateHealthFromTransactions(totals = financialTotals()) {
       const rate = totals.income > 0 ? Math.max(0,Math.min(100,Math.round((totals.income-totals.expense)/totals.income*100))) : 0;
@@ -2379,6 +2612,34 @@
       renderCalendar();
     }));
     renderCalendar();
+    let observedDayKey=dateKey(new Date());
+    let observedMonthKey=observedDayKey.slice(0,7);
+    function syncWithRealDate() {
+      const currentDate=new Date();
+      const currentDayKey=dateKey(currentDate);
+      if(currentDayKey===observedDayKey) return;
+      const currentMonthKey=currentDayKey.slice(0,7);
+      const visibleMonthKey=`${calendarState.current.getFullYear()}-${String(calendarState.current.getMonth()+1).padStart(2,'0')}`;
+      const calendarWasFollowingCurrentMonth=visibleMonthKey===observedMonthKey;
+      updateCurrentDateLabels(currentDate);
+      renderFutureExpenses();
+      renderRecentTransactions();
+      if(!dialog.open) dateInput.valueAsDate=currentDate;
+      observedDayKey=currentDayKey;
+      if(currentMonthKey!==observedMonthKey) {
+        observedMonthKey=currentMonthKey;
+        if(calendarWasFollowingCurrentMonth) {
+          calendarState.current=new Date(currentDate.getFullYear(),currentDate.getMonth(),1);
+          calendarState.selected=currentDate;
+          renderCalendar();
+          showToast(`${monthNames[currentDate.getMonth()]} começou — o histórico anterior continua salvo`);
+        }
+      } else if(calendarWasFollowingCurrentMonth) {
+        renderCalendar();
+      }
+    }
+    setInterval(syncWithRealDate,60000);
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden) syncWithRealDate(); });
     (async()=>{
       try {
         const response=await fetch('/api/events');

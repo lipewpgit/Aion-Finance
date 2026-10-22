@@ -6,6 +6,7 @@ self.addEventListener("push", (event) => {
     icon: "/aion-app-icon-512.png",
     badge: "/aion-app-icon.png",
     tag: data.tag || "aion-finance",
+    renotify: true,
     data: { url: data.url || "/painel" },
   }));
 });

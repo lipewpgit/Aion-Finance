@@ -1,5 +1,6 @@
 import { getCurrentUser, upsertProfile } from "@/app/auth";
 import { queryRows, runStatement } from "@/db/platform";
+import { parseMoneyToCents } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
 
@@ -41,16 +42,16 @@ export async function POST(request: Request) {
   if (!user) return Response.json({ error: "Entre na sua conta para continuar." }, { status: 401 });
   const body = await request.json() as Record<string, unknown>;
   const type = body.type === "income" ? "income" : body.type === "expense" ? "expense" : null;
-  const amount = Number(body.amount);
+  const amountCents = parseMoneyToCents(body.amount);
   const date = String(body.date ?? new Date().toISOString().slice(0, 10));
-  if (!type || !Number.isFinite(amount) || amount <= 0 || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+  if (!type || amountCents === null || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return Response.json({ error: "Informe se é entrada ou saída e um valor válido." }, { status: 400 });
   }
   const rows = await queryRows<InvestmentRow>(
     `INSERT INTO investment_transactions (user_id, type, amount_cents, transaction_date)
      VALUES (?, ?, ?, ?)
      RETURNING id, type, amount_cents, transaction_date`,
-    [user.userId, type, Math.round(amount * 100), date],
+    [user.userId, type, amountCents, date],
   );
   return Response.json({ investment: serializeInvestment(rows[0]) }, { status: 201 });
 }
