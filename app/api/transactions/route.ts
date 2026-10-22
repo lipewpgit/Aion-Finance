@@ -40,9 +40,22 @@ export async function POST(request: Request) {
   return Response.json({ transaction: { id: row.id, type: row.type, amount: row.amount_cents / 100, description: row.description, category: row.category, date: row.transaction_date } }, { status: 201 });
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   const user = await currentUser();
   if (!user) return Response.json({ error: "Entre na sua conta para continuar." }, { status: 401 });
+
+  const idValue = new URL(request.url).searchParams.get("id");
+  if (idValue !== null) {
+    const id = Number(idValue);
+    if (!Number.isInteger(id) || id <= 0) return Response.json({ error: "Movimentação inválida." }, { status: 400 });
+    const deleted = await queryRows<{ id: number }>(
+      "DELETE FROM transactions WHERE user_id = ? AND id = ? RETURNING id",
+      [user.userId, id],
+    );
+    if (!deleted.length) return Response.json({ error: "Movimentação não encontrada." }, { status: 404 });
+    return Response.json({ ok: true, id });
+  }
+
   await runStatement("DELETE FROM transactions WHERE user_id = ?", [user.userId]);
   return Response.json({ ok: true });
 }
