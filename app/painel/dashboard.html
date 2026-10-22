@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#050506">
   <meta name="description" content="Aion Finance — clareza para organizar contas, orçamento e metas em um só lugar.">
-  <title>Aion Finance — Seu dinheiro, no tempo certo</title>
+  <title>Aion Finance</title>
+  <meta name="application-name" content="Aion Finance">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Aion Finance">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="/aion-app-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -106,6 +112,19 @@
     .notification-head strong { font-size:15px; }
     .notification-head button { padding:5px 0; border:0; color:var(--mint); background:transparent; font-size:11px; font-weight:800; }
     .notification-list { display:grid; max-height:390px; overflow:auto; }
+    .push-settings { display:grid; gap:12px; padding:16px 18px; border-bottom:1px solid var(--line); background:linear-gradient(135deg,rgba(120,231,199,.08),rgba(255,255,255,.015)); }
+    .push-settings-copy { display:grid; grid-template-columns:36px minmax(0,1fr); gap:11px; align-items:center; }
+    .push-settings-icon { display:grid; place-items:center; width:36px; height:36px; border-radius:11px; color:#050506; background:var(--mint); }
+    .push-settings-icon svg { width:18px; height:18px; }
+    .push-settings strong { display:block; font-size:12px; }
+    .push-settings p { margin:3px 0 0; color:var(--muted); font-size:10px; line-height:1.5; }
+    .push-status { color:var(--muted); font-size:10px; }
+    .push-status.enabled { color:var(--mint); }
+    .push-actions { display:flex; gap:8px; }
+    .push-actions button { min-height:35px; padding:0 12px; border:1px solid var(--line); border-radius:10px; color:var(--ink); background:#17181c; font-size:10px; font-weight:800; }
+    .push-actions button:first-child { color:#050506; border-color:var(--mint); background:var(--mint); }
+    .push-actions button[data-enabled="true"] { color:#ffaaa0; border-color:rgba(255,143,129,.25); background:rgba(255,143,129,.07); }
+    .push-actions button:disabled { cursor:not-allowed; opacity:.5; }
     .notification-item { display:grid; grid-template-columns:36px minmax(0,1fr); gap:11px; padding:14px 18px; border-bottom:1px solid rgba(255,255,255,.06); }
     .notification-item:last-child { border-bottom:0; }
     .notification-item.unread { background:rgba(120,231,199,.035); }
@@ -901,6 +920,11 @@
             <button class="icon-button notification-button" id="notification-button" type="button" aria-label="Abrir notificações" aria-expanded="false" aria-controls="notification-panel" title="Notificações"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-badge" id="notification-badge" hidden>0</span></button>
             <section class="notification-panel" id="notification-panel" aria-label="Central de notificações" hidden>
               <div class="notification-head"><strong>Notificações</strong><button type="button" id="mark-notifications-read">Marcar como lidas</button></div>
+              <div class="push-settings">
+                <div class="push-settings-copy"><span class="push-settings-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></span><div><strong>Resumo diário no celular</strong><p>Às 23h: entradas, saídas e saldo positivo ou negativo.</p></div></div>
+                <span class="push-status" id="push-status" aria-live="polite">Verificando este dispositivo…</span>
+                <div class="push-actions"><button type="button" id="push-toggle">Ativar no celular</button><button type="button" id="push-test" hidden>Enviar teste</button></div>
+              </div>
               <div class="notification-list" id="notification-list"><div class="notification-empty">Tudo certo por aqui.</div></div>
             </section>
           </div>
@@ -1275,11 +1299,94 @@
       notificationBadge.hidden = unread===0;
       notificationList.innerHTML = activeNotifications.map(item=>`<article class="notification-item${readIds.has(item.id)?'':' unread'}"><span class="notification-item-icon ${item.tone==='warning'?'warning':''}"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5m0 3h.01"/><circle cx="12" cy="12" r="9"/></svg></span><div><strong>${escapeHTML(item.title)}</strong><p>${escapeHTML(item.text)}</p></div></article>`).join('');
     }
+    const pushStatus = document.getElementById('push-status');
+    const pushToggle = document.getElementById('push-toggle');
+    const pushTest = document.getElementById('push-test');
+    let pushRegistration = null;
+    let pushSubscription = null;
+    let pushInitialized = false;
+    let pushSupported = true;
+    function decodeApplicationServerKey(value) {
+      const padding = '='.repeat((4-value.length%4)%4);
+      const binary = atob((value+padding).replace(/-/g,'+').replace(/_/g,'/'));
+      return Uint8Array.from(binary,character=>character.charCodeAt(0));
+    }
+    function renderPushState(message) {
+      const enabled = Boolean(pushSubscription);
+      pushToggle.dataset.enabled = String(enabled);
+      pushToggle.textContent = enabled ? 'Desativar neste celular' : 'Ativar no celular';
+      pushTest.hidden = !enabled;
+      pushStatus.classList.toggle('enabled',enabled);
+      pushStatus.textContent = message || (enabled ? 'Ativado neste dispositivo · resumo às 23h' : 'Desativado neste dispositivo');
+    }
+    async function initPushNotifications() {
+      if (pushInitialized) return;
+      pushInitialized = true;
+      if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+        pushSupported = false;
+        pushToggle.disabled = true;
+        renderPushState('Este navegador não aceita notificações push.');
+        return;
+      }
+      try {
+        pushRegistration = await navigator.serviceWorker.register('/sw.js');
+        pushRegistration = await navigator.serviceWorker.ready;
+        pushSubscription = await pushRegistration.pushManager.getSubscription();
+        renderPushState();
+      } catch(error) {
+        pushSupported = false;
+        pushToggle.disabled = true;
+        renderPushState('Não foi possível preparar as notificações neste aparelho.');
+      }
+    }
+    pushToggle.addEventListener('click',async()=>{
+      pushToggle.disabled = true;
+      try {
+        await initPushNotifications();
+        if (!pushRegistration) throw new Error('Este navegador não aceita notificações push.');
+        if (pushSubscription) {
+          await fetch('/api/notifications',{method:'DELETE',headers:{'content-type':'application/json'},body:JSON.stringify({endpoint:pushSubscription.endpoint})});
+          await pushSubscription.unsubscribe();
+          pushSubscription = null;
+          renderPushState('Desativado neste dispositivo');
+          showToast('Notificações desativadas neste celular');
+          return;
+        }
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
+        if (isIOS && !isStandalone) throw new Error('No iPhone, adicione o Aion Finance à Tela de Início antes de ativar.');
+        const permission = await Notification.requestPermission();
+        if (permission!=='granted') throw new Error('Permita as notificações nas configurações do navegador.');
+        const configResponse = await fetch('/api/notifications');
+        const config = await configResponse.json();
+        if (!configResponse.ok) throw new Error(config.error||'Não foi possível ativar as notificações.');
+        const subscription = await pushRegistration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:decodeApplicationServerKey(config.publicKey)});
+        const response = await fetch('/api/notifications',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'subscribe',subscription:subscription.toJSON()})});
+        const payload = await response.json();
+        if (!response.ok) { await subscription.unsubscribe(); throw new Error(payload.error||'Não foi possível ativar as notificações.'); }
+        pushSubscription = subscription;
+        renderPushState('Ativado neste dispositivo · resumo às 23h');
+        showToast('Notificação diária ativada');
+      } catch(error) {
+        renderPushState(error.message);
+        showToast(error.message);
+      } finally { pushToggle.disabled = !pushSupported; }
+    });
+    pushTest.addEventListener('click',async()=>{
+      pushTest.disabled = true;
+      try {
+        const response = await fetch('/api/notifications',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'test'})});
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error||'Não foi possível enviar o teste.');
+        showToast('Notificação de teste enviada');
+      } catch(error) { showToast(error.message); }
+      finally { pushTest.disabled = false; }
+    });
     notificationButton.addEventListener('click',()=>{
       const willOpen = notificationPanel.hidden;
       notificationPanel.hidden = !willOpen;
       notificationButton.setAttribute('aria-expanded',String(willOpen));
-      if (willOpen) renderNotificationCenter();
+      if (willOpen) { renderNotificationCenter(); initPushNotifications(); }
     });
     document.getElementById('mark-notifications-read').addEventListener('click',()=>{
       const readIds = readNotificationIds();

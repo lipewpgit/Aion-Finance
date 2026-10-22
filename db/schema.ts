@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const profiles = sqliteTable("profiles", {
   userId: text("user_id").primaryKey(),
@@ -89,3 +89,25 @@ export const calendarEvents = sqliteTable(
   },
   (table) => [index("calendar_events_user_date_idx").on(table.userId, table.eventDate)],
 );
+
+export const pushSubscriptions = sqliteTable(
+  "push_subscriptions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull().references(() => profiles.userId, { onDelete: "cascade" }),
+    endpoint: text("endpoint").notNull().unique(),
+    p256dh: text("p256dh").notNull(),
+    auth: text("auth").notNull(),
+    createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => [index("push_subscriptions_user_idx").on(table.userId)],
+);
+
+export const dailyNotificationLog = sqliteTable("daily_notification_log", {
+  userId: text("user_id").notNull().references(() => profiles.userId, { onDelete: "cascade" }),
+  reportDate: text("report_date").notNull(),
+  sentAt: text("sent_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.reportDate] }),
+  index("daily_notification_log_user_date_idx").on(table.userId, table.reportDate),
+]);

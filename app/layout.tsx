@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aion Finance — seu dinheiro no tempo certo",
+  title: "Aion Finance",
   description: "Finanças, agenda, metas e mercado organizados em uma conta segura.",
-  other: {
-    "codex-preview": "development",
-  },
+  manifest: "/manifest.webmanifest",
+  applicationName: "Aion Finance",
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Aion Finance" },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/aion-app-icon.png",
+    shortcut: "/aion-app-icon.png",
+    apple: "/aion-app-icon.png",
   },
 };
 

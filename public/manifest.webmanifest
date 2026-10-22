@@ -1,0 +1,14 @@
+{
+  "name": "Aion Finance",
+  "short_name": "Aion Finance",
+  "description": "Organize suas finanças e receba seu resumo diário.",
+  "id": "/painel",
+  "start_url": "/painel",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "icons": [
+    { "src": "/aion-app-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "/aion-app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
