@@ -1125,7 +1125,7 @@
     const goalForm = document.getElementById('goal-form');
     const goalList = document.getElementById('goal-list');
     const dateInput = document.getElementById('date');
-    dateInput.valueAsDate = new Date();
+    dateInput.value = dateKey(new Date());
     const now = new Date();
     document.getElementById('today-label').textContent = now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}).replace(/^./,character=>character.toUpperCase());
     const daysRemaining = new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-now.getDate();
@@ -1144,6 +1144,13 @@
       const amount = Number(normalized);
       if (!Number.isFinite(amount) || amount <= 0) throw new Error('Informe um valor maior que zero.');
       return amount;
+    }
+    function normalizeAmount(value) {
+      if (typeof value === 'number') {
+        if (!Number.isFinite(value) || value <= 0) throw new Error('Informe um valor maior que zero.');
+        return value;
+      }
+      return parseMoney(value);
     }
     function escapeHTML(value) {
       return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
@@ -1240,7 +1247,7 @@
       finally { saveButton.disabled=false; saveButton.textContent='Salvar nome'; }
     });
     function addTransaction({ id, type, value, amount: storedAmount, description, category, date }, refresh = true) {
-      const amount = parseMoney(value ?? storedAmount);
+      const amount = normalizeAmount(value ?? storedAmount);
       const safeDescription = String(description || '').trim();
       if (!safeDescription) throw new Error('Informe uma descrição.');
       const row = document.createElement('div');
@@ -1253,11 +1260,12 @@
       row.querySelector('.tx-meta').textContent = `${category || 'Outros'} · ${formattedDate}`;
       list.querySelector('.empty-state')?.remove();
       list.prepend(row);
+      row.hidden = state.filter !== 'all' && row.dataset.type !== state.filter;
       state.transactions.push({ id, type, amount, description:safeDescription, category:category || 'Outros', date:date || null });
       if (state.hidden) row.querySelector('.money').classList.add('hidden-value');
       document.getElementById('transaction-count').textContent = `${list.children.length} lançamentos recentes`;
       if (refresh) renderFinancialSummary();
-      return { type, amount, description: safeDescription, category: category || 'Outros', date: date || null };
+      return { id, type, amount, description: safeDescription, category: category || 'Outros', date: date || null };
     }
 
     function financialTotals() {
@@ -1419,24 +1427,34 @@
       if (typeof rebuildChartData === 'function') rebuildChartData();
     }
 
+    let transactionHydrationId = 0;
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      const submitButton = form.querySelector('[type="submit"]');
+      if (submitButton.disabled) return;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Salvando…';
       try {
         const input = Object.fromEntries(new FormData(form));
         const amount = parseMoney(input.value);
         const response = await fetch('/api/transactions', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({ ...input, amount }) });
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.error || 'Não foi possível salvar a movimentação.');
+        transactionHydrationId += 1;
         addTransaction(payload.transaction);
-        form.reset(); dateInput.valueAsDate = new Date(); dialog.close(); showToast('Movimentação adicionada');
+        form.reset(); dateInput.value = dateKey(new Date()); dialog.close(); showToast('Movimentação adicionada');
+        await hydrateTransactions();
       } catch (error) { showToast(error.message); }
+      finally { submitButton.disabled = false; submitButton.textContent = 'Adicionar movimentação'; }
     });
 
     async function hydrateTransactions() {
+      const hydrationId = ++transactionHydrationId;
       try {
         const response = await fetch('/api/transactions');
         if (!response.ok) return;
         const payload = await response.json();
+        if (hydrationId !== transactionHydrationId) return;
         list.innerHTML = '';
         state.transactions = [];
         const transactions = payload.transactions || [];
@@ -1445,7 +1463,7 @@
         if (!transactions.length) list.innerHTML = '<div class="empty-state"><div><strong>Nenhuma movimentação ainda</strong>Registre uma entrada ou um gasto para começar.</div></div>';
         document.getElementById('transaction-count').textContent = transactions.length ? `${transactions.length} ${transactions.length===1?'lançamento salvo':'lançamentos salvos'}` : 'Seu histórico começa aqui';
         renderFinancialSummary();
-      } catch (_) {}
+      } catch (error) { console.error('Não foi possível sincronizar as movimentações.', error); }
     }
     hydrateTransactions();
 
